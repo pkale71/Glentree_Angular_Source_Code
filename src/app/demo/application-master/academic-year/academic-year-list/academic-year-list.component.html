@@ -1,0 +1,62 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-calendar-alt"></i>&nbsp;AcademicYears</h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="addAcademicYear()" *ngIf="!checkIsCurrent()">Add Academic Year</button>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table datatable id="tblAcademicYear" class="table table-striped row-border table-hover pt-10">
+              <thead>
+                <tr>
+                  <th>Sno</th>
+                  <th>Year</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Is Current</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let academicYear of academicYears let i=index">
+                  <td>{{i+1}}</td>
+                  <td>{{academicYear.year}}</td>
+                  <td>{{academicYear.startDate | date:"dd/MM/yyyy"}}</td>
+                  <td>{{academicYear.endDate | date:"dd/MM/yyyy"}}</td>
+                  <td>
+                    <span class="{{academicYear.isCurrent == 1 ? 'badge bg-success' : 'badge bg-danger'}}">
+                      {{academicYear.isCurrent == 1 ? 'Yes' : 'No'}}
+                    </span>
+                  </td>
+                  <td style="width:40px;text-align: right;">
+                    <i class="fa fa-trash-alt" (click)="deleteAcademicYear(academicYear.uuid)" *ngIf="academicYear.isExist == 0"
+                    title="Delete" style="cursor: pointer;"></i>
+                  </td>
+                </tr>
+                <tr *ngIf="academicYears.length == 0">
+                  <td></td>
+                  <td></td>
+                  <td>No record(s) found</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+              <tfoot *ngIf="academicYears.length > 0">
+                <tr>
+                    <th>Sno</th>
+                    <th>Year</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Is Current</th>
+                    <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

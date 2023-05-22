@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-md-12 col-xl-4" *ngFor="let grade of grades">
+        <hr />
+        <div class="card text-center border border-primary border-1 shadow rounded">
+          <h5 class="card-header bg-info text-white rounded">{{grade.name}}</h5>
+          <div class="card-body">
+            <a href="javascript:" class="btn btn-sm rounded-pill btn-outline-dark" 
+            *ngFor="let subject of grade.gradeSubjects" (click)="getChapters(subject.uuid)">{{subject.name}}</a>
+            <a href="javascript:" class="btn btn-sm rounded-pill btn-outline-dark" 
+            *ngIf="grade.gradeSubjects == null"><i class="fa fa-spin fa-spinner"></i></a>
+          </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 col-xl-12" *ngIf="grades.length == 0">
+      <hr />
+      <div class="card text-center shadow rounded">
+        <h5 class="card-header">No Grades Assigned</h5>
+      </div>
+    </div>
+</div>

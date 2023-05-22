@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="subjectAddModal"><i class="fa fa-plus"></i>&nbsp;Add Subject
+        &nbsp;<span [ngClass]="'badge bg-primary'">{{gradeName}}</span></h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addSubjectForm" id="addSubjectForm" (ngSubmit)="saveSubject()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-6">
+                <form [formGroup]="syllabusForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="syllabus">Syllabus&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control" required id="syllabus" formControlName="syllabus"
+                        [ngClass]="{'is-invalid': !syllabusForm.controls['syllabus'].valid && !isValidForm}">
+                            <option value="{{syllabus.id}}" *ngFor="let syllabus of syllabuses">{{syllabus.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="syllabusForm.controls['syllabus'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select syllabus.</label>
+                    </div>
+                </form>                
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" required 
+                    formControlName="name" maxlength="100"
+                    [ngClass]="{'is-invalid': !addSubjectForm.controls['name'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addSubjectForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter name.</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

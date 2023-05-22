@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="schoolDeleteModal"><i class="fa fa-trash-alt"></i>&nbsp;Delete School</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="deleteSchoolForm" id="deleteSchoolForm" (ngSubmit)="deleteSchool()" autoComplete="off">
+    <div class="modal-body">    
+        Are you sure to delete school?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!deleteClicked"><i class="fa fa-trash-alt"></i>Delete </button>
+        <button type="submit" class="btn btn-rounded btn-success" disabled="true" *ngIf="deleteClicked">
+            <i class="fa fa-spin fa-spinner"></i>Deleting...</button>
+    </div>
+</form>

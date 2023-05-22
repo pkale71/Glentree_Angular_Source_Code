@@ -1,0 +1,54 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="assignGradeAddModal"><i class="fa fa-plus"></i>&nbsp;Assign Supervise Grade
+        &nbsp;<span [ngClass]="'badge bg-primary'">{{academicYear?.year}}</span></h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="assignGradeForm" id="assignGradeForm" (ngSubmit)="saveAssignedGrade()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-4">
+                <form [formGroup]="gradeCategoryForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="gradeCategory">Grade Category&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control" required id="gradeCategory" formControlName="gradeCategory" (change)="getUnassignedGrades()"
+                        [ngClass]="{'is-invalid': !gradeCategoryForm.controls['gradeCategory'].valid && !isValidForm}">
+                            <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="gradeCategoryForm.controls['gradeCategory'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select grade category.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-8">
+                <form [formGroup]="gradeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="grade">Grades&nbsp;<span style="color: red;">*</span>
+                            &nbsp;<i class="fa fa-spin fa-spinner text-primary" *ngIf="isGradeListed"></i></label>
+                        <ng-select id="grade" required
+                        formControlName="grade" [options]="grades" [multiple]="true"
+                        [ngClass]="!gradeForm.controls['grade'].valid && !isValidForm ? ['ng select', 'is-invalid'] : ['ng-select']">
+                        </ng-select>
+                        <label style="color: red;"
+                        *ngIf="gradeForm.controls['grade'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select grade.</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

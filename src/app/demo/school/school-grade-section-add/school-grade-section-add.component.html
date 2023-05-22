@@ -1,0 +1,80 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="schoolGradeSectionAddModal"><i class="fa fa-plus"></i>&nbsp;Add Section</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addSchoolGradeSectionForm" id="addSchoolGradeSectionForm" (ngSubmit)="saveSection()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-4">
+                <form [formGroup]="academicYearForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="academicYear">Academic Year&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control" required id="academicYear" formControlName="academicYear"
+                        [ngClass]="{'is-invalid': !academicYearForm.controls['academicYear'].valid && !isValidForm}">
+                            <option value="{{academicYear.uuid}}" *ngFor="let academicYear of academicYears">{{academicYear.year}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="academicYearForm.controls['academicYear'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select academic year.</label>
+                    </div>
+                </form>                
+            </div>
+            <div class="col-md-4">
+                <form [formGroup]="gradeCategoryForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="gradeCategory">Grade Categories&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control" required id="gradeCategory" formControlName="gradeCategory"
+                        [ngClass]="{'is-invalid': !gradeCategoryForm.controls['gradeCategory'].valid && !isValidForm}" 
+                        (change)="filterGrades()">
+                            <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="gradeCategoryForm.controls['gradeCategory'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select grade category.</label>
+                    </div>
+                </form>               
+            </div>
+            <div class="col-md-4">
+                <form [formGroup]="gradeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="grade">Grade&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control" required id="grade" formControlName="grade"
+                        [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}">
+                            <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="gradeForm.controls['grade'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select grade.</label>
+                    </div>
+                </form>                
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-control-label" for="count">Section Count&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="count" type="text" required 
+                    formControlName="count" maxlength="2" pattern="^\d{1,2}"
+                    [ngClass]="{'is-invalid': !addSchoolGradeSectionForm.controls['count'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addSchoolGradeSectionForm.controls['count'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter section count.</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

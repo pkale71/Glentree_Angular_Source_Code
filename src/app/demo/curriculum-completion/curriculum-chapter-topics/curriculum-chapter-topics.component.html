@@ -1,0 +1,109 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-building"></i>&nbsp;Curriculum Completion
+          </h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="back()">Back</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Grade</label>
+                        <h6>{{chapter?.gradeSubject?.grade?.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <h6>{{chapter.gradeSubject?.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Chapter</label>
+                        <h6>{{chapter.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Section</label>
+                        <h6><span class="badge bg-success m-r-5">{{selectedSection?.name}}</span></h6>
+                    </div>
+                </div>
+            </div>
+            <h5 class="mt-5" *ngIf="topics.length > 0">Topics<span></span>
+            </h5><br/>
+            <div class="row" *ngIf="topics.length > 0">
+                <div class="col-md-12">      
+                    <div class="table-responsive">
+                        <table datatable id="tblCurriculumChapter" class="table table-striped row-border table-hover pt-10">
+                          <thead>
+                            <tr>
+                              <th style="width:5%">Sno</th>
+                              <th>Name</th>
+                              <th style="width:12%">Is Completed</th>
+                              <th style="width:20%">Completed On</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            
+                            <tr *ngFor="let topic of topics let i=index" [formGroup]="chapterCompletionForm[i]">
+                                <td>{{i+1}}</td>
+                                <td>{{topic.name}}</td>
+                                <td>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <select class="form-control input-md" required formControlName="isCompleted" (change)="resetIsCompleted(i)">
+                                                <option value="1">Yes</option>
+                                                <option value="0">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input
+                                                    class="form-control"
+                                                    autocomplete="off"
+                                                    placeholder="dd/mm/yyyy"
+                                                    formControlName="completedOn"
+                                                    [maxDate]=maxDate
+                                                    ngbDatepicker
+                                                    #d="ngbDatepicker" />
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="d.toggle()" style="min-height: 43px;">
+                                                    <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-rounded btn-success float-end" style="margin-top: 0rem;"
+                                    *ngIf="!saveClicked[i]" (click)="saveCurriculumCompletion(i)"><i class="fa fa-save"></i>&nbsp;Save</button>
+                                    <button type="button" class="btn btn-rounded btn-success float-end" disabled="true" 
+                                    *ngIf="saveClicked[i]"><i class="fa fa-spin fa-spinner"></i>Saving...</button>
+                                </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-xl-12" *ngIf="topics.length == 0">
+                <hr />
+                <div class="card text-center shadow rounded">
+                    <h5 class="card-header">No Topics Found</h5>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

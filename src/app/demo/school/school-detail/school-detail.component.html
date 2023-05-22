@@ -1,0 +1,173 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-building"></i>&nbsp;School&nbsp;
+            <span [ngClass]="school.active?'badge bg-success':'badge bg-danger'"> Active : {{school.active?'Yes':'No'}}</span>
+          </h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="back()">Back</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <h6>{{school.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Location</label>
+                        <h6>{{school.location}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <h6>{{school.email}}</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Contact1</label>
+                        <h6>{{school.contact1}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Contact2</label>
+                        <h6>{{school.contact2 ? school.contact2 : "---"}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <label>Syllabus</label>
+                      <h6>{{school.syllabus.name}}</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <label>Curriculum Upload As</label>
+                      <h6>{{school.curriculumUpload}}</h6>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <label>Curriculum Completion As</label>
+                      <h6>{{school.curriculumComplete}}</h6>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Grade Category</label>
+                        <h6>
+                            <span class="badge bg-primary m-r-5" *ngFor="let schoolGradeCategory of school.gradeCategories">
+                                {{schoolGradeCategory.gradeCategory?.name}}
+                            </span>
+                        </h6>
+                    </div>
+                </div>
+              </div>
+            <h5 class="mt-5">Curriculum Upload Setting</h5>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped row-border table-hover pt-10">
+                          <thead>
+                            <tr>
+                              <th>Sno</th>
+                              <th>User Type</th>
+                              <th>Can Upload</th>
+                              <th>Can Verify</th>
+                              <th>Can Publish</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let schoolUserSetting of school.schoolUserSetting let i=index">
+                              <td>{{i+1}}</td>
+                              <td>{{schoolUserSetting.userType?.name}}</td>
+                              <td><i class="fa fa-check" *ngIf="schoolUserSetting.canUpload == 1"></i></td>
+                              <td><i class="fa fa-check" *ngIf="schoolUserSetting.canVerify == 1"></i></td>
+                              <td><i class="fa fa-check" *ngIf="schoolUserSetting.canPublish == 1"></i></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                </div>
+            </div>
+            <h5 class="mt-5">Grdae/Section<span></span>
+            <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+            (click)="addSection()">Add Section</button>
+            </h5>
+            <div class="row">
+                <div class="col-md-4">
+                    <form [formGroup]="academicYearForm">
+                        <div class="form-group">
+                            <label class="form-control-label" for="academicYear">Academic Year</label>
+                            <select class="form-control" required id="academicYear" formControlName="academicYear">
+                                <option value="{{academicYear.uuid}}" *ngFor="let academicYear of academicYears">{{academicYear.year}}</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <form [formGroup]="gradeCategoryForm">
+                        <div class="form-group">
+                            <label class="form-control-label" for="gradeCategory">Grade Category</label>
+                            <select class="form-control" required id="gradeCategory" formControlName="gradeCategory">
+                                <option value="{{schoolGradeCategory?.gradeCategory.id}}" *ngFor="let schoolGradeCategory of school.gradeCategories">{{schoolGradeCategory?.gradeCategory.name}}</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <br/>
+                    <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked"
+                    (click)="getSchoolGradeSections()"><i class="fa fa-search"></i>&nbsp;Search</button>
+                    <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                      <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">      
+                    <div class="table-responsive">
+                        <table class="table table-striped row-border table-hover pt-10">
+                          <thead>
+                            <tr>
+                              <th>Sno</th>
+                              <th>Grade</th>
+                              <th>Sections</th>
+                            </tr>
+                          </thead>
+                          <tbody *ngIf="schoolGradeSections?.gradeCategory?.grades.length > 0">
+                            <tr *ngFor="let schoolGradeSection of schoolGradeSections?.gradeCategory?.grades let i=index">
+                              <td>{{i+1}}</td>
+                              <td>{{schoolGradeSection.name}}</td>
+                              <td>
+                                <span class="badge bg-primary m-r-5" *ngFor="let section of schoolGradeSection?.sections" 
+                                style="cursor: pointer;" title="Delete" (click)="deleteGradeSection(section.uuid, section.name)">
+                                    {{section.name}}
+                                </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                          <tbody *ngIf="!schoolGradeSections">
+                            <tr>
+                              <td></td>
+                              <td>No records found</td>
+                              <td></td>
+                            </tr>
+                          </tbody>                          
+                        </table>
+                      </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="auth-wrapper aut-bg-img-side cotainer-fiuid align-items-stretch">
+  <div class="row align-items-center w-100 align-items-stretch bg-white">
+    <div class="d-none d-lg-flex col-lg-8 aut-bg-img align-items-center d-flex justify-content-center">
+      <div class="col-md-8">
+        <!-- <h1 class="text-white mb-5">Login in Datta Able</h1>
+        <p class="text-white">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text
+          ever.
+        </p> -->
+      </div>
+    </div>
+    <div class="col-lg-4 align-items-stret h-100 align-items-center d-flex justify-content-center">
+      <div class="auth-content text-center">
+        <div class="mb-4">
+          <img src="../../../../../assets/images/login/login-logo.png"/>
+        </div>
+        <h3 class="mb-4">E-Resource Hub</h3>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="input-group mb-3">
+          <!-- <label class="form-label">Email address / email</label> -->
+          <input placeholder="Email"
+          type="text"
+          formControlName="email"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f?.['email'].errors }"
+        />
+        <div *ngIf="submitted && f?.['email'].errors" class="invalid-feedback">
+          <div *ngIf="f.email.errors.required">Email is required</div>
+        </div>
+        </div>
+        <div class="input-group mb-4">
+          <!-- <label class="form-label">Password</label> -->
+          <input placeholder="Password"
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f?.['password'].errors }"
+        />
+        <i class="fa fa-eye-slash" id="togglePassword" style="cursor:pointer;position: absolute;position: absolute;margin-left: 21rem;margin-top: 0.9rem;"></i>
+              <div *ngIf="submitted && f?.['password'].errors" class="invalid-feedback">
+                <div *ngIf="f.password.errors.required">Password is required</div>
+              </div>
+        </div>
+        
+        <!-- <div class="form-group text-left">
+          <div class="checkbox checkbox-fill d-inline">
+            <input type="checkbox" name="checkbox-fill-1" id="checkbox-fill-a1" checked="" />
+            <label for="checkbox-fill-a1" class="cr"> Save credentials</label>
+          </div>
+        </div> -->
+        <div class="d-grid mt-4">
+          <button class="btn btn-primary" *ngIf="!signinClicked"> Login </button>
+          <button class="btn btn-primary" [disabled]="true" *ngIf="signinClicked"> Please wait... </button>
+        </div>
+        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>
+      </form>
+        <p class="mb-2 text-muted">Forgot password? <a [routerLink]="['/auth/reset-password']">Reset</a></p>
+        <!-- <p class="mb-0 text-muted">Don’t have an account? <a [routerLink]="['/auth/signup']">Sign up</a></p> -->
+      </div>
+    </div>
+  </div>
+</div>

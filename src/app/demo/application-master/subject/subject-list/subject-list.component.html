@@ -1,0 +1,92 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-building"></i>&nbsp;Grade
+          </h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="back()">Back</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Grade Category</label>
+                        <h6>{{grade.gradeCategory?.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Grade</label>
+                        <h6>{{grade.name}}</h6>
+                    </div>
+                </div>
+            </div>
+            <h5 class="mt-5">Subjects<span></span>
+            <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+            (click)="addSubject()">Add Subject</button>
+            </h5>
+            <div class="row">
+                <div class="col-md-4">
+                    <form [formGroup]="syllabusForm">
+                        <div class="form-group">
+                            <label class="form-control-label" for="syllabus">Syllabus</label>
+                            <select class="form-control" required id="syllabus" formControlName="syllabus">
+                                <option value="{{syllabus.id}}" *ngFor="let syllabus of syllabuses">{{syllabus.name}}</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                  <br/>
+                  <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked"
+                  (click)="getSubjects()"><i class="fa fa-search"></i>&nbsp;Search</button>
+                  <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                    <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">      
+                    <div class="table-responsive">
+                        <table class="table table-striped row-border table-hover pt-10">
+                          <thead>
+                            <tr>
+                              <th>Sno</th>
+                              <th>Name</th>
+                              <th>Active</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let subject of subjects let i=index">
+                              <td>{{i+1}}</td>
+                              <td>{{subject.name}}</td>
+                              <td>
+                                <span [ngClass]="subject.active?'badge bg-success':'badge bg-danger'" style="cursor: pointer;" (click)="changeStatus(subject.uuid, subject.active)">
+                                  {{subject.active?'Yes':'No'}}
+                                </span>
+                              </td>
+                              <td style="width:40px;text-align: right;">
+                                <i class="fa fa-trash-alt" (click)="deleteSubject(subject.uuid)" title="Delete" 
+                                *ngIf="subject.isExist == 0" style="cursor: pointer;"></i>
+                                &nbsp;<i class="fa fa-edit" (click)="editSubject(subject.uuid)" title="Edit" 
+                                *ngIf="subject.isExist == 0" style="cursor: pointer;"></i>
+                                &nbsp;<i class="fa fa-list" (click)="detailSubject(subject.uuid)" title="Detail" 
+                                style="cursor: pointer;"></i>                    
+                              </td>
+                            </tr>
+                            <tr *ngIf="subjects.length == 0">
+                              <td></td>
+                              <td>No record(s) found</td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

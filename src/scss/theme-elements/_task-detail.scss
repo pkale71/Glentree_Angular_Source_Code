@@ -1,0 +1,42 @@
+.form-material {
+  .form-control {
+    height: 43px;
+  }
+}
+
+.new-task label input[type='checkbox'] {
+  display: block;
+  border-radius: 0.25em;
+}
+.custom-select,
+.form-control {
+  background: #ffffff;
+}
+.custom-check-input {
+  width: 1em;
+  height: 1em;
+  margin-top: 0.25em;
+  vertical-align: top;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: 1px solid rgba(0, 0, 0, 0.984);
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+}
+.new-task .to-do-list .cr {
+  border-radius: 6px;
+  border: 1px solid #222;
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  height: 24px;
+  margin-right: 0.5em;
+  position: relative;
+  width: 24px;
+  margin: 0;
+  top: 5px;
+}

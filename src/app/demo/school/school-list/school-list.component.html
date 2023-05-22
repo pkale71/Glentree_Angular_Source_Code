@@ -1,0 +1,73 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-building"></i>&nbsp;Schools</h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="addSchool()">Add School</button>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table datatable id="tblSchool" class="table table-striped row-border table-hover pt-10">
+              <thead>
+                <tr>
+                  <th>Sno</th>
+                  <th>Name</th>
+                  <th>Location</th>
+                  <th>Email</th>
+                  <th>Contact1</th>
+                  <th>Syllabus</th>
+                  <th>Curriculum Upload As</th>
+                  <th>Active</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let school of schools let i=index">
+                  <td>{{i+1}}</td>
+                  <td>{{school.name}}</td>
+                  <td>{{school.location | slice:0:15}}</td>
+                  <td>{{school.email}}</td>
+                  <td>{{school.contact1}}</td>
+                  <td>{{school.syllabus?.name}}</td>
+                  <td>{{school.curriculumUpload}}</td>
+                  <td><span [ngClass]="school.active?'badge bg-success':'badge bg-danger'" (click)="changeStatus(school.uuid, school.active)" 
+                    style="cursor: pointer;" title="Change Status">{{school.active?'Yes':'No'}}</span></td>
+                  <td style="width:40px;text-align: right;">
+                    <i class="fa fa-trash-alt" (click)="deleteSchool(school.uuid)" *ngIf="school.isExist == 0"
+                    title="Delete" style="cursor: pointer;"></i>
+                    &nbsp;<i class="fa fa-edit" (click)="editSchool(school.uuid)" title="Edit" style="cursor: pointer;"></i>
+                    &nbsp;<i class="fa fa-list" (click)="detailSchool(school.uuid)" title="Detail" style="cursor: pointer;"></i>
+                  </td>
+                </tr>
+                <tr *ngIf="schools.length == 0">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>No record(s) found</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+              <tfoot *ngIf="schools.length > 0">
+                <tr>
+                    <th>Sno</th>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Email</th>
+                    <th>Contact1</th>
+                    <th>Syllabus</th>
+                    <th>Curriculum Upload As</th>
+                    <th>Active</th>
+                    <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

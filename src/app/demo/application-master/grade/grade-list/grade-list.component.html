@@ -1,0 +1,72 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-book"></i>&nbsp;Grades</h5>
+          <!-- <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="addGrade()">Add Grade</button> -->
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+                <form [formGroup]="gradeCategoryForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="gradeCategory">Grade Category</label>
+                        <select class="form-control" required id="gradeCategory" formControlName="gradeCategory">
+                            <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory.name}}</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+              <br/>
+              <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked"
+              (click)="getGrades()"><i class="fa fa-search"></i>&nbsp;Search</button>
+              <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table datatable id="tblSubject" class="table table-striped row-border table-hover pt-10">
+              <thead>
+                <tr>
+                  <th>Sno</th>
+                  <th>Grade Category</th>
+                  <th>Name</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let grade of grades let i=index">
+                  <td>{{i+1}}</td>
+                  <td>{{grade.gradeCategory?.name}}</td>
+                  <td>{{grade.name}}</td>
+                  <td style="width:40px;text-align: right;">
+                    <!-- <i class="fa fa-trash-alt" (click)="deleteGrade(grade.id)" *ngIf="grade.isExist == 0"
+                    title="Delete" style="cursor: pointer;"></i>&nbsp;
+                    <i class="fa fa-edit" (click)="editGrade(grade.id)" *ngIf="grade.isExist == 0"
+                    title="Edit" style="cursor: pointer;"></i>&nbsp; -->
+                    <i class="fa fa-list" (click)="detailGrade(grade.id)" title="Detail" style="cursor: pointer;"></i>
+                  </td>
+                </tr>
+                <tr *ngIf="grades.length == 0">
+                  <td></td>
+                  <td></td>
+                  <td>No record(s) found</td>
+                  <td></td>
+                </tr>
+              </tbody>
+              <tfoot *ngIf="grades.length > 0">
+                <tr>
+                    <th>Sno</th>
+                    <th>Grade Category</th>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

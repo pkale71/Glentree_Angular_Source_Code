@@ -1,0 +1,116 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-user"></i>&nbsp;Users</h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="addUser()">Add User</button>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+                <form [formGroup]="roleForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="role">Role</label>
+                        <select class="form-control" required id="role" formControlName="role" (change)="checkSchoolRequired()">
+                            <option value="{{role.id}}" *ngFor="let role of roles">{{role.name}}</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+              <form [formGroup]="userTypeForm">
+                  <div class="form-group">
+                      <label class="form-control-label" for="userType">User Type</label>
+                      <select class="form-control" required id="userType" formControlName="userType">
+                          <option value="{{userType.id}}" *ngFor="let userType of userTypes">{{userType.name}}</option>
+                      </select>
+                  </div>
+              </form>
+            </div>
+            <div class="col-md-3">
+              <form [formGroup]="schoolForm">
+                  <div class="form-group">
+                      <label class="form-control-label" for="school">School</label>
+                      <select class="form-control" required id="school" formControlName="school">
+                          <option value="{{school.uuid}}" *ngFor="let school of schools">{{school.name}}</option>
+                      </select>
+                  </div>
+              </form>
+            </div>
+            <div class="col-md-3">
+              <br/>
+              <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked"
+              (click)="getUsers()"><i class="fa fa-search"></i>&nbsp;Search</button>
+              <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table datatable id="tblUser" class="table table-striped row-border table-hover pt-10">
+              <thead>
+                <tr>
+                  <th>Sno</th>
+                  <th>Full Name</th>
+                  <th>Gender</th>
+                  <th>Email</th>
+                  <th>Mobile</th>
+                  <th>User Type</th>
+                  <th>School</th>
+                  <th>Active</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of users let i=index">
+                  <td>{{i+1}}</td>
+                  <td>{{user.fullName}}</td>
+                  <td>{{user.gender}}</td>
+                  <td>{{user.email}}</td>
+                  <td>{{user.mobile}}</td>
+                  <td>{{user.userType?.name}}</td>
+                  <td>{{user.school.name != null ? user.school?.name : "---"}}</td>
+                  <td>
+                    <span [ngClass]="user.active?'badge bg-success':'badge bg-danger'" (click)="changeStatus(user.uuid, user.active)" 
+                    style="cursor: pointer;" title="Change Status">
+                      {{user.active?'Yes':'No'}}
+                    </span>
+                  </td>
+                  <td style="width:40px;text-align: right;">
+                    <!-- <i class="fa fa-trash-alt" (click)="deleteUser(user.uuid)" title="Delete" style="cursor: pointer;"></i> -->
+                    <i class="fa fa-edit" (click)="editUser(user.uuid)" title="Edit" style="cursor: pointer;"></i>
+                    &nbsp;<i class="fa fa-list" (click)="detailUser(user.uuid)" title="Detail" style="cursor: pointer;" 
+                    *ngIf="user.userType?.code=='SCHCD' || user.userType?.code=='SUBHD' || user.userType?.code=='TECHR'"></i>
+                  </td>
+                </tr>
+                <tr *ngIf="users.length == 0">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>No record(s) found</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+              <tfoot *ngIf="users.length > 0">
+                <tr>
+                    <th>Sno</th>
+                    <th>Full Name</th>
+                    <th>Gender</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>User Type</th>
+                    <th>School</th>
+                    <th>Active</th>
+                    <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

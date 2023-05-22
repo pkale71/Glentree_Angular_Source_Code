@@ -1,0 +1,92 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-building"></i>&nbsp;Topic
+          </h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="back()">Back</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Syllabus</label>
+                        <h6>{{chapter.gradeSubject?.syllabus?.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Grade</label>
+                        &nbsp;<i class="fa fa-search" style="cursor:pointer;" title="Detail" (click)="gotoRoute('Grade', '')"></i>
+                        <h6>{{chapter.gradeSubject?.grade?.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Subject</label>
+                        &nbsp;<i class="fa fa-search" style="cursor:pointer;" title="Detail" (click)="gotoRoute('Subject', chapter.gradeSubject?.grade?.id)"></i>
+                        <h6>{{chapter.gradeSubject?.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Chapter</label>
+                        &nbsp;<i class="fa fa-search" style="cursor:pointer;" title="Detail" (click)="gotoRoute('Chapter', chapter.gradeSubject?.uuid)"></i>
+                        <h6>{{chapter.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="form-group">
+                      <label>Active</label>
+                      <h6><span class="{{chapter.active ? 'badge bg-success' : 'badge bg-danger'}}">{{chapter.active ? 'Yes' : 'No'}}</span></h6>
+                  </div>
+                </div>
+            </div>
+            <h5 class="mt-5">Topics<span></span>
+            <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+            *ngIf="chapter.active == 1" (click)="addTopic()">Add Topic</button>
+            </h5><br/>
+            <div class="row">
+                <div class="col-md-12">      
+                    <div class="table-responsive">
+                        <table datatable id="tblTopic" class="table table-striped row-border table-hover pt-10">
+                          <thead>
+                            <tr>
+                              <th>Sno</th>
+                              <th>Name</th>
+                              <th>Active</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let topic of topics let i=index">
+                              <td>{{i+1}}</td>
+                              <td>{{topic.name}}</td>
+                              <td>
+                                <span [ngClass]="topic.active?'badge bg-success':'badge bg-danger'" style="cursor: pointer;" (click)="changeStatus(topic.uuid, topic.active)">
+                                  {{topic.active?'Yes':'No'}}
+                                </span>
+                              </td>
+                              <td style="width:40px;text-align: right;">
+                                <i class="fa fa-trash-alt" (click)="deleteTopic(topic.uuid)" title="Delete" 
+                                *ngIf="chapter.active == 1 && topic.isExist == 0" style="cursor: pointer;"></i>
+                                &nbsp;<i class="fa fa-edit" (click)="editTopic(topic.uuid)" title="Edit" 
+                                *ngIf="chapter.active == 1 && topic.isExist == 0" style="cursor: pointer;"></i>                    
+                              </td>
+                            </tr>
+                            <tr *ngIf="topics.length == 0">
+                              <td></td>
+                              <td>No record(s) found</td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,117 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-building"></i>&nbsp;Curriculum Completion
+          </h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="back()">Back</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Grade</label>
+                        <h6>{{subject?.grade.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <h6>{{subject.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-2" *ngIf="sections.length > 0">
+                    <div class="form-group">
+                        <label>Section Selected</label>
+                        <h6>{{selectedSection != null ? selectedSection.name : "---"}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-4" *ngIf="sections.length > 0">
+                    <div class="form-group">
+                        <label>Sections</label>
+                        <h6>
+                            <span class="badge bg-primary m-r-5" *ngFor="let section of sections" 
+                            style = "cursor: pointer;" (click)="selectSection(section.uuid, section.name)">
+                                {{section.name}}
+                            </span>
+                        </h6>
+                    </div>
+                </div>
+            </div>
+            <h5 class="mt-5" *ngIf="chapters.length > 0">Chapters<span></span>
+            </h5><br/>
+            <div class="row" *ngIf="chapters.length > 0">
+                <div class="col-md-12">      
+                    <div class="table-responsive">
+                        <table datatable id="tblCurriculumChapter" class="table table-striped row-border table-hover pt-10">
+                          <thead>
+                            <tr>
+                              <th style="width:5%">Sno</th>
+                              <th>Name</th>
+                              <th style="width:12%" *ngIf="curriculumComplete == 'Chapter-wise'">Is Completed</th>
+                              <th style="width:20%" *ngIf="curriculumComplete == 'Chapter-wise'">Completed On</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            
+                            <tr *ngFor="let chapter of chapters let i=index" [formGroup]="chapterCompletionForm[i]">
+                                <td>{{i+1}}</td>
+                                <td>{{chapter.name}}</td>
+                                <td *ngIf="curriculumComplete == 'Chapter-wise'">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <select class="form-control input-md" required formControlName="isCompleted" (change)="resetIsCompleted(i)">
+                                                <option value="1">Yes</option>
+                                                <option value="0">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td *ngIf="curriculumComplete == 'Chapter-wise'">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input
+                                                    class="form-control"
+                                                    autocomplete="off"
+                                                    placeholder="dd/mm/yyyy"
+                                                    formControlName="completedOn"
+                                                    [maxDate]=maxDate
+                                                    ngbDatepicker
+                                                    #d="ngbDatepicker" />
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="d.toggle()" style="min-height: 43px;">
+                                                    <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-rounded btn-success float-end" style="margin-top: 0rem;"
+                                    *ngIf="!saveClicked[i] && curriculumComplete == 'Chapter-wise'" (click)="saveCurriculumCompletion(i)"><i class="fa fa-save"></i>&nbsp;Save</button>
+                                    <button type="button" class="btn btn-rounded btn-success float-end" disabled="true" 
+                                    *ngIf="saveClicked[i] && curriculumComplete == 'Chapter-wise'"><i class="fa fa-spin fa-spinner"></i>Saving...</button>
+                                    <button type="button" class="btn btn-rounded btn-primary float-end"
+                                    *ngIf="curriculumComplete == 'Topic-wise'" (click)="showTopics(chapter.uuid)">
+                                    <i class="fa fa-search"></i>&nbsp;Show Topics</button>
+                                </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-xl-12" *ngIf="chapters.length == 0">
+                <hr />
+                <div class="card text-center shadow rounded">
+                    <h5 class="card-header">No Chapters Found</h5>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

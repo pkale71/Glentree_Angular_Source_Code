@@ -1,0 +1,86 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="academicYearAddModal"><i class="fa fa-plus"></i>&nbsp;Add Academic Year</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addAcademicYearForm" id="addAcademicYearForm" (ngSubmit)="saveAcademicYear()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-control-label" for="year">Year&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="year" type="text" required 
+                    formControlName="year" maxlength="12"
+                    [ngClass]="{'is-invalid': !addAcademicYearForm.controls['year'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addAcademicYearForm.controls['year'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter year.</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-control-label" for="startDate">Start Date&nbsp;<span style="color: red;">*</span></label>
+                    <div class="input-group">
+                        <input
+                            class="form-control"
+                            autocomplete="off"
+                            placeholder="dd/mm/yyyy"
+                            formControlName="startDate"
+                            [(ngModel)]="startDate"
+                            ngbDatepicker
+                            #d1="ngbDatepicker"
+                            [ngClass]="{'is-invalid': !addAcademicYearForm.controls['startDate'].valid && !isValidForm}"
+                        />
+                        <div class="input-group-append">
+                            <span class="input-group-text" (click)="d1.toggle()" style="min-height: 43px;">
+                            <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>                        
+                    <label style="color: red;"
+                    *ngIf="addAcademicYearForm.controls['startDate'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter start date.</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-control-label" for="endDate">End Date&nbsp;<span style="color: red;">*</span></label>
+                    <div class="input-group">
+                        <input
+                            class="form-control"
+                            autocomplete="off"
+                            placeholder="dd/mm/yyyy"
+                            formControlName="endDate"
+                            [(ngModel)]="endDate"
+                            ngbDatepicker
+                            #d2="ngbDatepicker"
+                            [ngClass]="{'is-invalid': !addAcademicYearForm.controls['endDate'].valid && !isValidForm}"
+                        />
+                        <div class="input-group-append">
+                            <span class="input-group-text" (click)="d2.toggle()" style="min-height: 43px;">
+                            <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <label style="color: red;"
+                    *ngIf="addAcademicYearForm.controls['endDate'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter end date.</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

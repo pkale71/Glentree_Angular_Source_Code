@@ -1,0 +1,107 @@
+// @import '~angular-archwizard/styles/archwizard.css';
+
+@import '~@angular/cdk/overlay-prebuilt.css';
+// advance-notification
+@import '../../../node_modules/angular-notifier/styles';
+@import '../../../node_modules/angular-archwizard/styles/archwizard';
+
+@import 'ngx-perfect-scrollbar';
+@import 'adv-notification';
+@import 'css-animator';
+@import 'angular-morris-js';
+@import 'angular-pell';
+@import 'ks-modal-gallery';
+@import 'angular-6-datatable';
+@import 'angular-datatables';
+@import 'ngx-chips';
+@import 'angular-archwizard';
+@import 'ng-select';
+@import 'ng-fullcalendar';
+@import 'sweatalert';
+
+.dataTables_wrapper .dataTables_length {
+  margin-bottom: 15px;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+  padding: 10px 0;
+}
+
+.dataTables_wrapper .dataTables_info {
+  padding: 20px 0;
+}
+
+table.dataTable {
+  width: 100% !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  color: $primary-color !important;
+}
+
+body.datta-dark {
+  .table {
+    --bs-table-striped-color: $dark-layout-font;
+    color: $dark-layout-font;
+  }
+  mark,
+  .mark {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: $dark-layout-font;
+  }
+}
+
+app-frm-masking input {
+  width: 100% !important;
+  padding: 5px 20px;
+  background: #f4f7fa;
+  outline: none;
+  border: 1px solid #ced4da;
+}
+
+dp-day-calendar .dp-weekdays {
+  font-size: 13px !important;
+}
+
+.tag-chips .tag__text {
+  line-height: 1.75 !important;
+}
+
+.switch {
+  border: none !important;
+}
+
+app-form-switch .switch {
+  label {
+    margin-bottom: 0.5rem;
+    margin-right: 5px;
+  }
+}
+
+.bs-tooltip-top .tooltip-arrow {
+  bottom: 3px !important;
+}
+
+
+body.datta-rtl{
+  .was-validated .form-select:invalid:not([multiple]):not([size]),
+  .was-validated .form-control:invalid{
+    background-position: left 0.75rem center, center left 2.25rem;
+  }
+  aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator li:not(:last-child):after,
+  aw-wizard-navigation-bar.horizontal.large-filled-symbols ul.steps-indicator li:not(:last-child):after{
+    left: calc(50% - 115px);
+  }  
+
+  aw-wizard-navigation-bar.horizontal.small ul.steps-indicator li:not(:last-child):after{
+    left: calc(50% - 98px);
+  }
+
+  aw-wizard-navigation-bar.vertical.small ul.steps-indicator{
+    padding: 5px 19px 5px 75px;
+  }
+
+  aw-wizard-navigation-bar.vertical ul.steps-indicator li a{
+    display: block;
+  }
+}
