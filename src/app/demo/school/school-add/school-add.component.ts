@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { Syllabus } from 'src/app/theme/shared/model/syllabus';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CommonService } from 'src/app/theme/shared/service/common.service';
 import { SchoolService } from 'src/app/theme/shared/service/school.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -14,23 +15,25 @@ import { UserType } from 'src/app/theme/shared/model/userType';
 import { SchoolUserSetting } from 'src/app/theme/shared/model/school-user-setting';
 
 // third party
+import { FileUploadValidators, FileUploadModule } from '@iplab/ngx-file-upload';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-school-add',
   standalone: true,
-  imports: [CommonModule, SharedModule, SelectModule],
+  imports: [CommonModule, SharedModule, SelectModule, FileUploadModule],
   templateUrl: './school-add.component.html',
   styleUrls: ['./school-add.component.scss']
 })
 export class SchoolAddComponent {
   @Input() public modalParams;
+  filesControl = new FormControl<File[]>(null, FileUploadValidators.filesLimit(1));
   syllabuses : Syllabus[];
   userTypes : UserType[];
   schoolUserSettings : SchoolUserSetting[];
   gradeCategories : Array<IOption>;
   addSchoolForm: FormGroup;
+  logoForm : FormGroup;
   schoolUserSettingForm: FormGroup;
   syllabusForm: FormGroup;
   userTypeForm: FormGroup;
@@ -82,6 +85,10 @@ export class SchoolAddComponent {
       'userType': ['']
     });
 
+    this.logoForm = this.formbuilder.group({
+      'logo': this.filesControl
+    });
+
     this.schoolUserSettingForm = this.formbuilder.group({
       'canUpload': [''],
       'canVerify': [''],
@@ -113,7 +120,7 @@ export class SchoolAddComponent {
     let response = await this.commonService.getUserTypes().toPromise();
     if (response.status_code == 200 && response.message == 'success') 
     {
-      this.userTypes = response.data.userTypes.filter(userType => userType.role.id == 2);
+      this.userTypes = response.data.userTypes;
     }
   }
 
@@ -209,6 +216,28 @@ export class SchoolAddComponent {
     }
   }
 
+  onSelectLogo(event) 
+  {
+    if (this.logoForm.get("logo").value) 
+    {
+      const file = this.logoForm.get("logo").value;
+      let fSize : number =parseFloat((file[0].size / 1048576).toFixed(2));
+      if(file[0].type == "image/jpg" || file[0].type == "image/jpeg" || file[0].type == "image/png")
+      {
+        if(fSize > 1)
+        {
+          this.showNotification("warning", "File should be less than 1 MB");
+          this.filesControl.setValue([]);
+        }
+      }
+      else
+      {
+        this.showNotification("warning", "Accept only [jpeg, png] file.");
+        this.filesControl.setValue([]);
+      }
+    }
+  }
+
   deleteSchoolUserSetting(index : number)
   {
     Swal.fire({
@@ -246,9 +275,32 @@ export class SchoolAddComponent {
         {
           this.addSchoolForm.get("schoolUserSetting").setValue(this.schoolUserSettings);
         }
+/////////Create Form Data
+        let formData = new FormData();
+        formData.append("uuid","");
+        formData.append("name", this.addSchoolForm.get("name").value);
+        formData.append("location", this.addSchoolForm.get("location").value);
+        formData.append("email", this.addSchoolForm.get("email").value);
+        formData.append("contact1", this.addSchoolForm.get("contact1").value);
+        formData.append("contact2", this.addSchoolForm.get("contact2").value);
+        formData.append("syllabus", JSON.stringify(this.addSchoolForm.controls["syllabus"].value));
+        formData.append("gradeCategory", this.addSchoolForm.get("gradeCategory").value);
+        formData.append("curriculumUpload", this.addSchoolForm.get("curriculumUpload").value);
+        formData.append("curriculumComplete", this.addSchoolForm.get("curriculumComplete").value);
+        formData.append("schoolUserSetting", JSON.stringify(this.addSchoolForm.get("schoolUserSetting").value));
+        
+        if(this.logoForm.get("logo").value != null)
+        {
+          formData.append("logoFile", (this.logoForm.get("logo").value)[0]);
+        }
+        else
+        {
+          formData.append("logoFile","");
+        }
+///////
         try
         {
-          let response = await this.schoolService.saveSchool(this.addSchoolForm.value).toPromise();
+          let response = await this.schoolService.saveSchool(formData).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
               this.showNotification("success", "School Created");

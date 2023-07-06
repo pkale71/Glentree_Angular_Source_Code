@@ -9,11 +9,14 @@ import { CommonService } from 'src/app/theme/shared/service/common.service';
 import { UserService } from 'src/app/theme/shared/service/user.service';
 import { UserType } from 'src/app/theme/shared/model/userType';
 import { School } from 'src/app/theme/shared/model/school';
-
+import { Router } from '@angular/router';
 // my Shared Service
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
 import { User } from 'src/app/theme/shared/model/user';
 import { SchoolService } from 'src/app/theme/shared/service/school.service';
+
+// third party
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-edit',
@@ -30,6 +33,7 @@ export class UserEditComponent {
   userTypes : UserType[];
   masterUserTypes : UserType[];
   schools : School[];
+  selectedSchools : School[];
   editUserForm: FormGroup;
   roleForm: FormGroup;
   userTypeForm: FormGroup;
@@ -43,6 +47,7 @@ export class UserEditComponent {
     private activeModal: NgbActiveModal,
     private notifier: NotifierService,
     private formbuilder: FormBuilder,
+    private router : Router,
     public commonSharedService : CommonSharedService,
     public schoolService : SchoolService) 
   {
@@ -57,6 +62,7 @@ export class UserEditComponent {
     this.userTypes = [];
     this.masterUserTypes = [];
     this.schools = [];
+    this.selectedSchools = [];
     this.isValidForm = true;
     this.saveClicked = false;
     this.editUserForm = this.formbuilder.group({
@@ -68,7 +74,7 @@ export class UserEditComponent {
       mobile: ['',[Validators.required, Validators.pattern('^[0-9]{10,10}'), Validators.maxLength(10), Validators.minLength(10)]],
       role: this.formbuilder.group({ 'id': [''] }),
       userType: this.formbuilder.group({ 'id': [''] }),
-      school: this.formbuilder.group({ 'uuid': [''] })
+      schools: ['']
     });
 
     this.roleForm = this.formbuilder.group({
@@ -80,12 +86,19 @@ export class UserEditComponent {
     });
 
     this.schoolForm = this.formbuilder.group({
-      'school': ['']
+      'school': ['', Validators.required]
     });
 ///Get User
     this.getUserRoles();
     this.getUserTypes();
-    this.getSchools();
+    if(this.commonSharedService.loginUser.userType.code == 'SUADM')
+    {
+      this.getSchools();
+    }
+    else
+    {
+      this.schools = JSON.parse(JSON.stringify(this.commonSharedService.loginUser.schools));
+    }
     this.getUser(this.uuid);
   }
 
@@ -120,6 +133,69 @@ export class UserEditComponent {
     {
       this.schools = response.data.schools;
     }
+  }
+
+  applySchool()
+  {
+    /////
+    let schoolUUID : string = this.schoolForm.get("school").value;
+    let roleId : number = this.roleForm.get("role").value;
+    if(schoolUUID != "" && roleId > 0)
+    {
+      if(this.selectedSchools.length > 0)
+      {
+        if(roleId == 2 && this.selectedSchools.length == 1)
+        {
+          this.showNotification("info", "School role user mapped with one school only");
+        }
+        else
+        {
+          //check data exist in the table
+          let existSchool : School[] = this.selectedSchools.filter(selectedSchool => selectedSchool.uuid == schoolUUID);
+          if(existSchool.length == 0)
+          {
+            let tempSchool : School[] = this.schools.filter(school => school.uuid == schoolUUID);
+            this.selectedSchools.push(tempSchool[0]);
+            this.schoolForm.get("school").setValue("");
+          }
+          else
+          {
+            this.showNotification("warning", "School already in the list")
+          }
+        }
+      }
+      else
+      {
+        let tempSchool : School[] = this.schools.filter(school => school.uuid == schoolUUID);
+        this.selectedSchools.push(tempSchool[0]);
+        this.schoolForm.get("school").setValue("");
+      }
+    }
+    else
+    {
+      this.showNotification("warning", "Select user role & school");
+    }
+  }
+
+  deleteSchool(index : number)
+  {
+    Swal.fire({
+      customClass: {
+        container: 'my-swal'
+      },
+      title: 'Confirmation',
+      text: 'Are you sure to delete school?',
+      icon: 'warning',
+      showCloseButton: true,
+      showCancelButton: true
+    }).then((willDelete) => {
+      if (willDelete.dismiss) {
+        
+      } else {
+        this.selectedSchools.splice(index,1);
+        this.showNotification('info', "School Deleted");
+      }
+    });    
   }
 
   async checkDuplicateEmailMobile(checkFor : string, value : string) 
@@ -159,53 +235,44 @@ export class UserEditComponent {
       this.editUserForm.patchValue(this.user);
       this.roleForm.get("role").setValue(this.user.role.id);
       this.userTypeForm.get("userType").setValue(this.user.userType.id);
-      this.checkSchoolRequired(this.user.role.id);
-      this.schoolForm.get("school").setValue(this.user.school?.uuid);
       this.roleForm.get('role').disable();
+      this.filterUserTypes(this.user.role.id);
+      this.selectedSchools = this.user.schools;
+      if(this.user.userTypeExist == 1)
+      {
+        this.userTypeForm.get('userType').disable();
+      }
     }
   }
 
-  checkSchoolRequired(roleId: number)
+  filterUserTypes(roleId : number)
   {
-    this.userTypes = [];
-    if(this.roles.length > 0)
+    this.selectedSchools = [];
+    if(roleId > 0)
     {
-      let filterRoles : Role[] = this.roles.filter(role => role.id == roleId);
-      if(filterRoles.length > 0)
+      this.userTypes = this.masterUserTypes.filter(userType => userType.role.id == roleId);
+    }
+    else
+    {
+      this.userTypes = [];
+    }
+  }
+
+  getSelectedSchools()
+  {
+    let schools : string = "";
+    for(let i=0;i<this.selectedSchools.length;i++)
+    {
+      if(schools == "")
       {
-        /////Get Role wise User Types
-        let filterUserTypes : UserType[] = this.masterUserTypes.filter(userType => userType.role.id == roleId);
-        if(filterUserTypes.length > 0)
-        {
-          this.userTypes = filterUserTypes;
-        }
-        ///////////////////
-        if(filterRoles[0].name == "School")
-        {
-          if(this.schoolForm.get('school').value != "")
-          {
-            this.schoolForm.get('school').setValue("");
-          }
-          this.schoolForm.get('school').enable();
-          this.schoolForm.get('school').addValidators(Validators.required);
-          this.schoolForm.get('school').updateValueAndValidity();
-        }
-        else
-        {
-          this.schoolForm.get('school').setValue("");
-          this.schoolForm.get('school').disable();
-          this.schoolForm.get('school').clearValidators();
-          this.schoolForm.get('school').updateValueAndValidity();
-        }
+        schools = this.selectedSchools[i].uuid;
       }
       else
       {
-        this.schoolForm.get('school').setValue("");
-        this.schoolForm.get('school').disable();
-        this.schoolForm.get('school').clearValidators();
-        this.schoolForm.get('school').updateValueAndValidity();
+        schools = schools + "," + this.selectedSchools[i].uuid;
       }
     }
+    return schools;
   }
 
   async saveUser()
@@ -214,35 +281,45 @@ export class UserEditComponent {
     {
       let checkSchoolManditory : boolean = false;
       this.roleForm.get('role').enable();
-      this.schoolForm.get('school').enable();
-      checkSchoolManditory = this.schoolForm.get('school').hasValidator(Validators.required);
-      if(this.editUserForm.valid && this.roleForm.valid && this.userTypeForm.valid && ((checkSchoolManditory && this.schoolForm.valid) || !checkSchoolManditory))
+      if(this.user.userTypeExist == 1)
       {
-        this.isValidForm = true;
-        this.saveClicked = true;
-        this.editUserForm.controls["role"].get("id").setValue(this.roleForm.get("role").value);
-        this.editUserForm.controls["userType"].get("id").setValue(this.userTypeForm.get("userType").value);
-        if(checkSchoolManditory)
+        this.userTypeForm.get('userType').enable();
+      }
+      checkSchoolManditory = this.schoolForm.get('school').hasValidator(Validators.required);
+      if(this.editUserForm.valid && this.roleForm.valid && this.userTypeForm.valid)
+      {
+        if(this.selectedSchools.length > 0)
         {
-          this.editUserForm.controls["school"].get("uuid").setValue(this.schoolForm.get("school").value);
-        }
-        try
-        {
-          this.roleForm.get('role').disable();
-          this.schoolForm.get('school').disable();
-          
-          let response = await this.userService.updateUser(this.editUserForm.value).toPromise();
-          if (response.status_code == 200 && response.message == 'success') 
+          this.isValidForm = true;
+          this.saveClicked = true;
+          this.editUserForm.controls["role"].get("id").setValue(this.roleForm.get("role").value);
+          this.editUserForm.controls["userType"].get("id").setValue(this.userTypeForm.get("userType").value);
+          this.editUserForm.get("schools").setValue(this.getSelectedSchools());
+          try
           {
-              this.showNotification("success", "User Updated");
-              this.commonSharedService.userListObject.next({result : "success"});
+            this.roleForm.get('role').disable();
+            if(this.user.userTypeExist == 1)
+            {
+              this.userTypeForm.get('userType').disable();
+            }
+            let response = await this.userService.updateUser(this.editUserForm.value).toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+                this.showNotification("success", "User Updated");
+                this.closeModal();
+                this.router.navigateByUrl("/user/detail/" + this.user.uuid);
+            }
+          }
+          catch(e)
+          {
+            this.showNotification("error", e);
+            this.isValidForm = false;
+            this.saveClicked = false;
           }
         }
-        catch(e)
+        else
         {
-          this.showNotification("error", e);
-          this.isValidForm = false;
-          this.saveClicked = false;
+          this.showNotification("info", "No School Mapped");
         }
       }
       else
@@ -250,7 +327,6 @@ export class UserEditComponent {
         this.isValidForm = false;
         this.saveClicked = false;
         this.roleForm.get('role').disable();
-        this.schoolForm.get('school').disable();
       }
     }
   }

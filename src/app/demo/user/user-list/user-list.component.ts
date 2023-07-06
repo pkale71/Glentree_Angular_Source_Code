@@ -58,6 +58,7 @@ export class UserListComponent
   ngOnInit() 
   {
     this.searchClicked = false;
+    this.userTypes = [];
     this.roleForm = this.formbuilder.group({
       'role': ['']
     });
@@ -71,7 +72,20 @@ export class UserListComponent
 
     this.getUserRoles();
     this.getUserTypes();
-    this.getSchools();
+    if(this.commonSharedService.loginUser.userType.code == 'SUADM')
+    {
+      this.getSchools();
+    }
+    else
+    {
+      this.schools = JSON.parse(JSON.stringify(this.commonSharedService.loginUser.schools));
+      let tempSchool : School = new School();
+      tempSchool.id = 0;
+      tempSchool.uuid = "";
+      tempSchool.name = "All";
+      this.schools.unshift(tempSchool);
+      this.schoolForm.get("school").setValue("");
+    }
   }
 
   public userAddResult:any = this.commonSharedService.userListObject.subscribe(res =>{
@@ -91,6 +105,7 @@ export class UserListComponent
       tempRole.id = 0;
       tempRole.name = "All";
       this.roles.unshift(tempRole);
+      this.roleForm.get("role").setValue("0");
     }
   }
 
@@ -100,6 +115,30 @@ export class UserListComponent
     if (response.status_code == 200 && response.message == 'success') 
     {
       this.masterUserTypes = response.data.userTypes;
+      this.userTypes = this.masterUserTypes;
+    }
+    let tempUserType : UserType = new UserType();
+    tempUserType.id = 0;
+    tempUserType.name = "All";
+    this.userTypes.unshift(tempUserType);
+    this.userTypeForm.get("userType").setValue("0");
+  }
+
+  filterUserTypes(roleId : number)
+  {
+    if(roleId > 0)
+    {
+      this.userTypes = this.masterUserTypes.filter(userType => userType.role?.id == roleId);
+      let tempUserType : UserType = new UserType();
+      tempUserType.id = 0;
+      tempUserType.name = "All";
+      this.userTypes.unshift(tempUserType);
+      this.userTypeForm.get("userType").setValue("0");
+    }
+    else
+    {
+      this.userTypes = [];
+      this.userTypes = this.masterUserTypes;
     }
   }
 
@@ -114,56 +153,7 @@ export class UserListComponent
       tempSchool.uuid = "";
       tempSchool.name = "All";
       this.schools.unshift(tempSchool);
-    }
-  }
-
-  checkSchoolRequired()
-  {
-    let roleId : number = this.roleForm.get("role").value;
-    this.userTypes = [];
-    if(this.roles.length > 0)
-    {
-      let filterRoles : Role[] = this.roles.filter(role => role.id == roleId);
-      if(filterRoles.length > 0)
-      {
-        /////Get Role wise User Types
-        let filterUserTypes : UserType[] = this.masterUserTypes.filter(userType => userType.role.id == roleId);
-        if(filterUserTypes.length > 0)
-        {
-          this.userTypes = filterUserTypes;
-          let tempUserType : UserType = new UserType();
-          tempUserType.id = 0;
-          tempUserType.name = "All";
-          this.userTypes.unshift(tempUserType);
-        }
-        else
-        {
-          let tempUserType : UserType = new UserType();
-          tempUserType.id = 0;
-          tempUserType.name = "All";
-          this.userTypes.unshift(tempUserType);
-        }
-        ///////////////////
-        if(filterRoles[0].name == "School")
-        {
-          if(this.schoolForm.get('school').value != "")
-          {
-            this.schoolForm.get('school').setValue("");
-          }
-          this.schoolForm.get('school').enable();
-          this.schoolForm.get('school').setValue("");
-        }
-        else
-        {
-          this.schoolForm.get('school').setValue("");
-          this.schoolForm.get('school').disable();
-        }
-      }
-      else
-      {
-        this.schoolForm.get('school').setValue("");
-        this.schoolForm.get('school').disable();
-      }
+      this.schoolForm.get("school").setValue("");
     }
   }
 
@@ -171,26 +161,17 @@ export class UserListComponent
   {
     let roleId : number = this.roleForm.get("role").value;
     let userTypeId : number = this.userTypeForm.get("userType").value;
-    let schoolUUID : string = this.schoolForm.get("school").value;
-    
+    let schoolUUID : string = this.schoolForm.get("school").value;    
     this.searchClicked = true;
-    let response = await this.userService.getUsers(roleId, userTypeId).toPromise();
+    let response = await this.userService.getUsers(roleId, userTypeId, schoolUUID).toPromise();
     if (response.status_code == 200 && response.message == 'success') 
     {
       $('#tblUser').DataTable().clear().destroy();
       this.masterUsers = response.data.users;
-      if(schoolUUID != "")
-      {
-        let filterUsers : User[] = this.masterUsers.filter(filterUser => filterUser.school.uuid == schoolUUID);
-        this.users = filterUsers;
-      }
-      else
-      {
-        this.users = this.masterUsers;
-      }
+      this.users = this.masterUsers;
       setTimeout(function(){
         $('#tblUser').DataTable();
-      },1000);
+      },800);
       this.searchClicked = false;
       this.modalService.dismissAll();
     }

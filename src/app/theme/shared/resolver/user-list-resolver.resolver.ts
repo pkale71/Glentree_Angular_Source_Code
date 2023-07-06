@@ -9,6 +9,6 @@ export class UserListResolver implements Resolve<any> {
   constructor(private userService: UserService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    return this.userService.getUsers(0, 0);
+    return this.userService.getUsers(0, 0, "");
   }
 }

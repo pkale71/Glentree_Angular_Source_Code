@@ -21,5 +21,6 @@ export class School {
   curriculumExist?: number;
   curriculumCompleteExist?: number;
   isExist?: number;
+  fileName?: string;
   schoolUserSetting?: SchoolUserSetting[];
 }

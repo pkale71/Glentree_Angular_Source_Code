@@ -2,7 +2,7 @@
     <div class="col-sm-12">
       <div class="card">
         <div class="card-header" style="padding: 10px 25px;">
-          <h5 style="margin-top: 0.8rem;"><i class="fa fa-building"></i>&nbsp;Grade
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-book"></i>&nbsp;Grade
           </h5>
           <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
            (click)="back()">Back</button>
@@ -18,6 +18,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Grade</label>
+                        &nbsp;<i class="fa fa-search" style="cursor:pointer;" title="Detail" (click)="gotoRoute('Grade', '')"></i>
                         <h6>{{grade.name}}</h6>
                     </div>
                 </div>
@@ -62,8 +63,10 @@
                               <td>{{i+1}}</td>
                               <td>{{subject.name}}</td>
                               <td>
-                                <span [ngClass]="subject.active?'badge bg-success':'badge bg-danger'" style="cursor: pointer;" (click)="changeStatus(subject.uuid, subject.active)">
+                                <span [ngClass]="subject.active?'badge bg-success':'badge bg-danger'">
                                   {{subject.active?'Yes':'No'}}
+                                  <i class="fa fa-recycle m-l-5" style="cursor: pointer;" 
+                                  (click)="changeStatus(subject.uuid, subject.active)"></i>
                                 </span>
                               </td>
                               <td style="width:40px;text-align: right;">

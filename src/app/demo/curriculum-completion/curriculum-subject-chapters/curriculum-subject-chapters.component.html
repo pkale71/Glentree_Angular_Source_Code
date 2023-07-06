@@ -2,7 +2,7 @@
     <div class="col-sm-12">
       <div class="card">
         <div class="card-header" style="padding: 10px 25px;">
-          <h5 style="margin-top: 0.8rem;"><i class="fa fa-building"></i>&nbsp;Curriculum Completion
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-calendar"></i>&nbsp;Curriculum Completion
           </h5>
           <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
            (click)="back()">Back</button>
@@ -30,18 +30,20 @@
                 <div class="col-md-4" *ngIf="sections.length > 0">
                     <div class="form-group">
                         <label>Sections</label>
-                        <h6>
+                        <h6 *ngIf="!fetchClicked">
                             <span class="badge bg-primary m-r-5" *ngFor="let section of sections" 
                             style = "cursor: pointer;" (click)="selectSection(section.uuid, section.name)">
                                 {{section.name}}
                             </span>
                         </h6>
+                        <h6 *ngIf="fetchClicked">
+                            <span class="badge bg-warning">Please wait...&nbsp;<i class="fa fa-spin fa-spinner"></i></span>
+                        </h6>
                     </div>
                 </div>
             </div>
-            <h5 class="mt-5" *ngIf="chapters.length > 0">Chapters<span></span>
-            </h5><br/>
-            <div class="row" *ngIf="chapters.length > 0">
+            <h5 class="mt-5" *ngIf="chapters.length > 0 && selectedSection">Chapters</h5><br/>
+            <div class="row" *ngIf="chapters.length > 0 && selectedSection">
                 <div class="col-md-12">      
                     <div class="table-responsive">
                         <table datatable id="tblCurriculumChapter" class="table table-striped row-border table-hover pt-10">
@@ -55,7 +57,6 @@
                             </tr>
                           </thead>
                           <tbody>
-                            
                             <tr *ngFor="let chapter of chapters let i=index" [formGroup]="chapterCompletionForm[i]">
                                 <td>{{i+1}}</td>
                                 <td>{{chapter.name}}</td>
@@ -92,11 +93,11 @@
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-rounded btn-success float-end" style="margin-top: 0rem;"
-                                    *ngIf="!saveClicked[i] && curriculumComplete == 'Chapter-wise'" (click)="saveCurriculumCompletion(i)"><i class="fa fa-save"></i>&nbsp;Save</button>
+                                    *ngIf="!saveClicked[i] && curriculumComplete == 'Chapter-wise' && selectedSection && !fetchClicked" (click)="saveCurriculumCompletion(i)"><i class="fa fa-save"></i>&nbsp;Save</button>
                                     <button type="button" class="btn btn-rounded btn-success float-end" disabled="true" 
-                                    *ngIf="saveClicked[i] && curriculumComplete == 'Chapter-wise'"><i class="fa fa-spin fa-spinner"></i>Saving...</button>
+                                    *ngIf="saveClicked[i] && curriculumComplete == 'Chapter-wise' && selectedSection"><i class="fa fa-spin fa-spinner"></i>Saving...</button>
                                     <button type="button" class="btn btn-rounded btn-primary float-end"
-                                    *ngIf="curriculumComplete == 'Topic-wise'" (click)="showTopics(chapter.uuid)">
+                                    *ngIf="curriculumComplete == 'Topic-wise' && selectedSection" (click)="showTopics(chapter.uuid)">
                                     <i class="fa fa-search"></i>&nbsp;Show Topics</button>
                                 </td>
                             </tr>
@@ -105,10 +106,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-xl-12" *ngIf="chapters.length == 0">
+            <div class="col-md-12 col-xl-12" *ngIf="chapters.length == 0 && selectedSection">
                 <hr />
                 <div class="card text-center shadow rounded">
                     <h5 class="card-header">No Chapters Found</h5>
+                </div>
+            </div>
+            <div class="col-md-12 col-xl-12" *ngIf="selectedSection == null">
+                <hr />
+                <div class="card text-center shadow rounded">
+                    <h5 class="card-header">Select Section</h5>
                 </div>
             </div>
         </div>

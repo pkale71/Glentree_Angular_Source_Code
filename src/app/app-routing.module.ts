@@ -35,6 +35,13 @@ import { UserTeachChapterResolver } from './theme/shared/resolver/user-teach-cha
 import { CurrentAcademicYearResolver } from './theme/shared/resolver/current-academic-year-resolver.resolver';
 import { CurriculumChapterTopicsComponent } from './demo/curriculum-completion/curriculum-chapter-topics/curriculum-chapter-topics.component';
 import { UserTeachChapterTopicsResolver } from './theme/shared/resolver/user-teach-chapter-topics-resolver.resolver';
+import { CurriculumCompletionReportComponent } from './demo/report/curriculum-completion-report/curriculum-completion-report.component';
+import { MaterialTypeListComponent } from './demo/application-master/material-type/material-type-list/material-type-list.component';
+import { MaterialTypeListResolver } from './theme/shared/resolver/material-type-list-resolver.resolver';
+import { CurriculumUploadListComponent } from './demo/curriculum-upload/curriculum-upload-list/curriculum-upload-list.component';
+import { CurriculumUploadDetailResolver } from './theme/shared/resolver/curriculum-upload-detail-resolver.resolver';
+import { CurriculumShowComponent } from './demo/curriculum-upload/curriculum-show/curriculum-show.component';
+import { CurriculumUploadFileResolver } from './theme/shared/resolver/curriculum-upload-file-resolver.resolver';
 
 const routes: Routes = [
   {
@@ -84,7 +91,7 @@ const routes: Routes = [
         canActivate: [AuthGuardService],
         resolve: 
         { 
-          school : SchoolDetailResolver,
+          school : SchoolDetailResolver
         },
       },
       {
@@ -144,6 +151,15 @@ const routes: Routes = [
         },
       },
       {
+        path: 'applicationMaster/materialTypes',
+        loadComponent: () => MaterialTypeListComponent,
+        canActivate: [AuthGuardService],
+        resolve: 
+        { 
+          materialTypes : MaterialTypeListResolver,
+        },
+      },
+      {
         path: 'curriculumCompletion/:userUUID',
         loadComponent: () => CurriculumGradeSubjectsComponent,
         canActivate: [AuthGuardService],
@@ -172,6 +188,33 @@ const routes: Routes = [
           currentAcademicYear : CurrentAcademicYearResolver,
           subjectChapter : ChapterDetailResolver,
           chapterTopics : UserTeachChapterTopicsResolver,
+        },
+      },
+      {
+        path: 'curriculumUploads',
+        loadComponent: () => CurriculumUploadListComponent,
+        canActivate: [AuthGuardService],
+        resolve: 
+        { 
+          academicYears : AcademicYearListResolver
+        },
+      },
+      {
+        path: 'showCurriculumUpload/:curriculumUploadUUID',
+        loadComponent: () => CurriculumShowComponent,
+        canActivate: [AuthGuardService],
+        resolve: 
+        { 
+          curriculumUpload : CurriculumUploadDetailResolver
+        },
+      },
+      {
+        path: 'reports/curriculumCompletetionReport',
+        loadComponent: () => CurriculumCompletionReportComponent,
+        canActivate: [AuthGuardService],
+        resolve: 
+        { 
+          academicYears : AcademicYearListResolver
         },
       },
     ]

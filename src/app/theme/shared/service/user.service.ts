@@ -30,24 +30,9 @@ export class UserService {
     return this.apiService.post('/user/checkDuplicateEmailMobile', data);
   }
 
-  getUsers(roleId : number, userTypeId : number)
+  getUsers(roleId : number, userTypeId : number, schoolUUID : string)
   {
-    if(roleId > 0 && userTypeId > 0)
-    {
-      return this.apiService.get('/user/getUsers/' + roleId + '/' + userTypeId);
-    }
-    else if(roleId > 0)
-    {
-      return this.apiService.get('/user/getUsers/' + roleId);
-    }
-    else if(userTypeId > 0)
-    {
-      return this.apiService.get('/user/getUsers/' + roleId + '/' + userTypeId);
-    }
-    else
-    {
-      return this.apiService.get('/user/getUsers');
-    }
+    return this.apiService.get('/user/getUsers/' + roleId + '/' + userTypeId + '/' + schoolUUID);
   }
 
   saveUser(user : any)
@@ -85,9 +70,9 @@ export class UserService {
     return this.apiService.post('/user/deleteAssignedGrades', userSuperviceGrade);
   }
 
-  getAssignedGrades(userUUID : string, academicYearUUID : string)
+  getAssignedGrades(userUUID : string, academicYearUUID : string, schoolUUID : string)
   {
-    return this.apiService.get('/user/getAssignedGrades/' + userUUID + '/' + academicYearUUID);
+    return this.apiService.get('/user/getAssignedGrades/' + userUUID + '/' + academicYearUUID + '/' + schoolUUID);
   }
 
   ////User Assigned Grade Subjects
@@ -106,9 +91,9 @@ export class UserService {
     return this.apiService.post('/user/deleteAssignedGradeSubjects', userSuperviceGradeSubject);
   }
 
-  getAssignedGradeSubjects(userUUID : string, academicYearUUID : string)
+  getAssignedGradeSubjects(userUUID : string, academicYearUUID : string, schoolUUID : string)
   {
-    return this.apiService.get('/user/getAssignedGradeSubjects/' + userUUID + '/' + academicYearUUID);
+    return this.apiService.get('/user/getAssignedGradeSubjects/' + userUUID + '/' + academicYearUUID + '/' + schoolUUID);
   }
 
   ////User Assigned Grade Sections
@@ -127,20 +112,20 @@ export class UserService {
     return this.apiService.post('/user/deleteAssignedGradeSections', userAssignGradeSection);
   }
 
-  getAssignedGradeSections(userUUID : string, academicYearUUID : string)
+  getAssignedGradeSections(userUUID : string, academicYearUUID : string, schoolUUID : string, gradeId : number)
   {
-    return this.apiService.get('/user/getAssignedGradeSections/' + userUUID + '/' + academicYearUUID);
+    return this.apiService.get('/user/getAssignedGradeSections/' + userUUID + '/' + academicYearUUID + '/' + schoolUUID + "/" + gradeId);
   }
 
   ////User Assigned Grade Sections APIS For Curriculum Completion
-  getTeachGrades(userUUID : string)
+  getTeachGrades(userUUID : string, schoolUUID : string)
   {
-    return this.apiService.get('/user/getTeachGrades/' + userUUID);
+    return this.apiService.get('/user/getTeachGrades/' + userUUID + '/' + schoolUUID);
   }
 
-  getTeachSubjects(userUUID : string, gradeId : number)
+  getTeachSubjects(userUUID : string, gradeId : number, schoolUUID : string)
   {
-    return this.apiService.get('/user/getTeachSubjects/' + userUUID + '/' + gradeId);
+    return this.apiService.get('/user/getTeachSubjects/' + userUUID + '/' + gradeId + '/' + schoolUUID);
   }
 
   getAssignedChapters(subjectUUID : string)
@@ -153,9 +138,9 @@ export class UserService {
     return this.apiService.get('/user/getAssignedTopics/' + chapterUUID);
   }
 
-  getTeachGradeSections(userUUID : string, gradeId : number, subjectUUID : string)
+  getTeachGradeSections(userUUID : string, gradeId : number, subjectUUID : string, schoolUUID : string)
   {
-    return this.apiService.get('/user/getTeachGradeSections/' + userUUID + '/' + gradeId + '/' + subjectUUID);
+    return this.apiService.get('/user/getTeachGradeSections/' + userUUID + '/' + gradeId + '/' + subjectUUID + '/' + schoolUUID);
   }
 
   //Chapter Complete Status

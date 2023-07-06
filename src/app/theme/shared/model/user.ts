@@ -1,5 +1,6 @@
 ﻿import { Role } from "./role";
 import { School } from "./school";
+import { UserSchool } from "./user-school";
 import { UserType } from "./userType";
 
 export class User {
@@ -13,7 +14,7 @@ export class User {
   mobile?: string;
   email?: string;
   gender?: string;
-  school?: School;
+  schools?: School[];
   password?: string;
   active?: boolean;
   createdOn?: Date;
@@ -21,5 +22,6 @@ export class User {
   deletedOn?: Date;
   deletedBy?: User;
   lastLogin?: Date;
+  userTypeExist?: number;
   accessToken?: string;
 }

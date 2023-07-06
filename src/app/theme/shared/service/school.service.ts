@@ -13,9 +13,18 @@ export class SchoolService {
     return this.apiService.get('/school/getSchool/' + uuid);
   }
 
+  getSchoolLogo(uuid : string){
+    return this.apiService.get('/school/getSchoolLogo/' + uuid);
+  }
+
   getSchoolGradeCategories(schoolUUID : string)
   {
     return this.apiService.get('/school/getSchoolGradeCategories/' + schoolUUID);
+  }
+
+  getSchoolGrades(schoolUUID : string)
+  {
+    return this.apiService.get('/school/getSchoolGrades/' + schoolUUID);
   }
 
   saveSchool(school : any)
@@ -48,6 +57,11 @@ export class SchoolService {
     {
       return this.apiService.get('/school/getGradeSections/' + academicYearUUID + '/' + schoolUUID + '/' + gradeCategoryId + '/' + gradeId);
     }
+  }
+
+  getSections(academicYearUUID : string, schoolUUID : string, gradeId : number)
+  {
+    return this.apiService.get('/school/getSections/' + academicYearUUID + '/' + schoolUUID + '/' + gradeId);
   }
 
   saveSchoolGradeSection(schoolGradeSection : any)

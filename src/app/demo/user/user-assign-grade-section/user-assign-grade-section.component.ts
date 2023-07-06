@@ -210,7 +210,6 @@ export class UserAssignGradeSectionComponent {
   {
     if(!this.saveClicked)
     {
-      console.log(this.assignGradeSectionForm.valid+" && "+this.gradeCategoryForm.valid+"  && "+this.gradeForm.valid+"  && "+this.subjectForm.valid+"  && "+this.sectionForm.valid)
       if(this.assignGradeSectionForm.valid && this.gradeCategoryForm.valid && this.gradeForm.valid && this.subjectForm.valid && this.sectionForm.valid)
       {
         this.isValidForm = true;
@@ -229,6 +228,7 @@ export class UserAssignGradeSectionComponent {
               this.commonSharedService.userAssignedGradeSectionListObject.next({
                 academicYearUUID : this.academicYear.uuid,
                 userUUID : this.userUUID,
+                schoolUUID : this.schoolUUID,
                 result : "success"
               });
           }

@@ -1,6 +1,6 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotifierService } from 'angular-notifier';
@@ -48,7 +48,7 @@ export class SubjectListComponent
       this.subjects = [];
       this.searchClicked = false;
       this.syllabusForm = this.formbuilder.group({
-        'syllabus': ['']
+        'syllabus': ['', Validators.required]
       });
       this.getSyllabuses();
       if(localStorage.getItem("SYLLABUS_ID"))
@@ -78,6 +78,11 @@ export class SubjectListComponent
       if (response.status_code == 200 && response.message == 'success') 
       {
         this.syllabuses = response.data.syllabuses;
+        if(this.syllabuses.length > 0)
+        {
+          this.syllabusForm.get("syllabus").setValue(this.syllabuses[0].id);
+          this.getSubjects();
+        }
       }
     }
 
@@ -105,18 +110,34 @@ export class SubjectListComponent
         }
       }
     }
+    
+    gotoRoute(routeName : string, id : string)
+    {
+      if(routeName == "Grade")
+      {
+        this.router.navigateByUrl("applicationMaster/grades");
+      }
+    }
 
     addSubject()
     {
-      let params = {
-        "id" : this.grade.id,
-        "gradeName" : this.grade.name
+      if(this.syllabusForm.valid)
+      {
+        let params = {
+          "id" : this.grade.id,
+          "gradeName" : this.grade.name,
+          "syllabusId" : this.syllabusForm.get("syllabus").value
+        }
+        const dialogRef = this.modalService.open(SubjectAddComponent, 
+        { 
+          size: 'lg', backdrop: 'static' 
+        });
+        dialogRef.componentInstance.modalParams = params;
       }
-      const dialogRef = this.modalService.open(SubjectAddComponent, 
-      { 
-        size: 'lg', backdrop: 'static' 
-      });
-      dialogRef.componentInstance.modalParams = params;
+      else
+      {
+        this.showNotification("warning", "Select Academic Year")
+      }
     }
 
     editSubject(uuid : string)

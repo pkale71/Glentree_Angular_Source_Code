@@ -185,4 +185,35 @@ export class CommonService {
   {
     return this.apiService.post('/common/deleteChapterTopic', chapterTopic);
   }
+
+  //Material Type & File Type
+  getFileTypes() 
+  {
+    return this.apiService.get('/common/getFileTypes');
+  }
+
+  getMaterialTypes() 
+  {
+    return this.apiService.get('/common/getMaterialTypes');
+  }
+
+  getMaterialType(uuid : string) 
+  {
+    return this.apiService.get('/common/getMaterialType/' + uuid);
+  }
+
+  saveMaterialType(materialType : any)
+  {
+    return this.apiService.post('/common/saveMaterialType', materialType);
+  }
+
+  updateMaterialType(materialType : any)
+  {
+    return this.apiService.post('/common/updateMaterialType', materialType);
+  }
+
+  deleteMaterialType(materialType : any)
+  {
+    return this.apiService.post('/common/deleteMaterialType', materialType);
+  }
 }

@@ -5,7 +5,8 @@
 export const environment = {
   //appVersion: require('../../package.json').version,
   production: false,
-  apiUrl: 'http://localhost:8082'
+  //apiUrl: 'http://localhost:8082'
+  apiUrl: 'https://nodeserver.ssinformatics.org.in'
 };
 
 /*

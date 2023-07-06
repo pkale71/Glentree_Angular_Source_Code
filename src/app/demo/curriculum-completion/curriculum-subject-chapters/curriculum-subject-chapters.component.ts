@@ -36,6 +36,7 @@ export class CurriculumSubjectChaptersComponent {
   curriculumComplete : string;
   maxDate : any;
   saveClicked : boolean[];
+  fetchClicked : boolean;
 
   constructor(private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
@@ -52,7 +53,7 @@ export class CurriculumSubjectChaptersComponent {
     this.chapters = this.activatedRoute.snapshot.data['subjectChapters'].data.subjectChapters;
     this.loginUser = this.commonSharedService.loginUser;
     //Chapter-wise or Topic-wise
-    this.curriculumComplete = this.loginUser.school?.curriculumComplete;
+    this.curriculumComplete = this.loginUser.schools[0]?.curriculumComplete;
     /////
     this.generateDynamicFormArray();
 
@@ -62,10 +63,11 @@ export class CurriculumSubjectChaptersComponent {
 
   ngOnInit() 
   {
+    this.fetchClicked = false;
     this.sections = [];
     this.saveClicked = [];
     this.selectedSection = null;   
-    this.getSections(this.loginUser?.uuid, this.subject.grade?.id, this.subject.uuid);
+    this.getSections(this.loginUser?.uuid, this.subject.grade?.id, this.subject.uuid, this.loginUser.schools[0].uuid);
   }
 
   showNotification(type: string, message: string): void 
@@ -74,11 +76,11 @@ export class CurriculumSubjectChaptersComponent {
     this.notifier.notify(type, message);
   }
 
-  async getSections(userUUID : string, gradeId : number, subjectUUID : string)
+  async getSections(userUUID : string, gradeId : number, subjectUUID : string, schoolUUID : string)
   {
     try
     {
-      let response = await this.userService.getTeachGradeSections(userUUID, gradeId, subjectUUID).toPromise();
+      let response = await this.userService.getTeachGradeSections(userUUID, gradeId, subjectUUID, schoolUUID).toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         this.sections = response.data.sections;
@@ -155,7 +157,7 @@ export class CurriculumSubjectChaptersComponent {
       let chapterUUID : string = null;
       if(academicYearUUID != "" && userUUID != "" && gradeId > 0 && subjectUUID != "" && sectionUUID != "" && chapterUUID != "")
       {
-        this.showNotification("info", "Please Wait While Fetching Records");
+        this.fetchClicked = true;
         let response = await this.userService.getUserChapterCompleteStatuses(academicYearUUID, userUUID, gradeId, subjectUUID, sectionUUID, chapterUUID).toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
@@ -204,7 +206,7 @@ export class CurriculumSubjectChaptersComponent {
         this.chapterCompletionForm[i].get("completedOn").setValue(null);
       }
     }
-    this.showNotification("success", "Records Fetching Completed");
+    this.fetchClicked = false;
   }
 
   async saveCurriculumCompletion(index : number)

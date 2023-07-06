@@ -32,6 +32,8 @@ export class SchoolDetailComponent {
   schoolGradeSections : SchoolGradeSection;
   academicYearForm : FormGroup;
   gradeCategoryForm : FormGroup;
+  isCurrentAcademicYear : boolean;
+  schoolLogo : any;
 
   constructor(private commonService: CommonService, 
     private notifier: NotifierService, 
@@ -47,7 +49,9 @@ export class SchoolDetailComponent {
   
     ngOnInit() 
     {
+      this.isCurrentAcademicYear = false;
       this.searchClicked = false;
+      this.schoolLogo = "";
       this.academicYearForm = this.formbuilder.group({
         'academicYear': ['']
       });
@@ -57,6 +61,7 @@ export class SchoolDetailComponent {
       });
       
       this.getAcademicYears();
+      this.getSchoolLogo(this.school.uuid);
     }
 
     showNotification(type: string, message: string): void 
@@ -74,6 +79,33 @@ export class SchoolDetailComponent {
       }
     })
 
+    async getSchoolLogo(uuid)
+    {
+      try
+      {
+        let response = await this.schoolService.getSchoolLogo(uuid).toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        {
+          this.schoolLogo = response.data.logoFile;
+        }
+      }
+      catch(e)
+      {}
+    }
+    
+    checkCurrentAcademicYear(academicYearUUID : string)
+    {
+      this.isCurrentAcademicYear = false;
+      let tempAcademicYear : AcademicYear[] = this.academicYears.filter(academicYear => academicYear.uuid == academicYearUUID);
+      if(tempAcademicYear.length > 0)
+      {
+        if(tempAcademicYear[0].isCurrent == 1)
+        {
+          this.isCurrentAcademicYear = true;
+        }
+      }
+    }
+
     async getSchoolGradeSections() 
     {
       this.schoolGradeSections = null;
@@ -85,6 +117,7 @@ export class SchoolDetailComponent {
         let response = await this.schoolService.getSchoolGradeSections(academicYearUUID, this.school.uuid, gradeCategoryId, 0).toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
+          this.checkCurrentAcademicYear(academicYearUUID);
           this.schoolGradeSections = response.data.gradeSections;
           this.searchClicked = false;
           this.modalService.dismissAll();

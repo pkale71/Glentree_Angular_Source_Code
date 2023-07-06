@@ -55,17 +55,6 @@ const NavigationItems = [
         ]
       },
       {
-        id: 'users',
-        title: 'Users',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/users',
-        param: "",
-        icon: 'feather icon-user',
-        userTypeCode : ['SUADM','HDOFA'],
-        hidden : false
-      },
-      {
         id: 'applicationMaster',
         title: 'Application Master',
         type: 'collapse',
@@ -73,6 +62,16 @@ const NavigationItems = [
         userTypeCode : ['SUADM','HDOFA'],
         hidden : false,
         children: [
+          {
+            id: 'academicYears',
+            title: 'AcademicYears',
+            type: 'item',
+            url: '/applicationMaster/academicYears',
+            param: "",
+            userTypeCode : ['SUADM'],
+            hidden : false,
+            target: false
+          },
           {
             id: 'syllabuses',
             title: 'Syllabuses',
@@ -94,12 +93,12 @@ const NavigationItems = [
             target: false
           },
           {
-            id: 'academicYears',
-            title: 'AcademicYears',
+            id: 'materialTypes',
+            title: 'MaterialTypes',
             type: 'item',
-            url: '/applicationMaster/academicYears',
+            url: '/applicationMaster/materialTypes',
             param: "",
-            userTypeCode : ['HDOFA'],
+            userTypeCode : ['SUADM','HDOFA'],
             hidden : false,
             target: false
           }
@@ -117,6 +116,17 @@ const NavigationItems = [
         hidden : false
       },
       {
+        id: 'users',
+        title: 'Users',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/users',
+        param: "",
+        icon: 'feather icon-user',
+        userTypeCode : ['SUADM','HDOFA'],
+        hidden : false
+      },
+      {
         id: 'curriculumCompletion',
         title: 'Curriculum Completion',
         type: 'item',
@@ -127,6 +137,36 @@ const NavigationItems = [
         userTypeCode : ['SUBHD','TECHR','SCHCD'],
         hidden : false
       },
+      {
+        id: 'curriculumUploads',
+        title: 'Curriculum Uploads',
+        type: 'item',
+        classes: 'nav-item',
+        param: "",
+        url: '/curriculumUploads/',
+        icon: 'feather icon-upload',
+        userTypeCode : [],
+        hidden : false
+      },
+      // {
+      //   id: 'reports',
+      //   title: 'Reports',
+      //   type: 'collapse',
+      //   icon: 'feather icon-book',
+      //   userTypeCode : ['CURHD','HDOFA','SCHPL','SCHVP','SUBHD','SCHCD'],
+      //   hidden : false,
+      //   children: [
+      //     {
+      //       id: 'curriculumCompletetionReport',
+      //       title: 'Curriculum Completetion',
+      //       type: 'item',
+      //       url: '/reports/curriculumCompletetionReport',
+      //       param: "",
+      //       userTypeCode : ['CURHD','HDOFA','SCHPL','SCHVP','SUBHD','SCHCD'],
+      //       hidden : false
+      //     },
+      //   ]
+      // },
     ]
   }
 ];

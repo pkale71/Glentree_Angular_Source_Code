@@ -21,11 +21,16 @@ export class CommonSharedService
     public userAssignedGradeListObject = new Subject<any>();
     public userAssignedGradeSectionListObject = new Subject<any>();
     public userAssignedGradeSubjectListObject = new Subject<any>();
+    public currentAcademicYearListObject = new Subject<any>();
+    public materialTypeListObject = new Subject<any>();
+    public curriculumUploadListObject = new Subject<any>();
     public loginUser : User;
+    public currentAcademicYear : any;
   
     constructor() 
     { 
         this.loginUser = JSON.parse(localStorage.getItem('user'));
+        this.currentAcademicYear = JSON.parse(localStorage.getItem('currentAcademicYear'));
     }
 
     public confirmPasswordValidator(controlName: string, matchingControlName: string)
@@ -46,5 +51,5 @@ export class CommonSharedService
 
     public prepareSelectOptions(options: Array<IOption>): Array<IOption> {
         return options.map((option) => ({ value: option.value, label: option.label }));
-      }
+    }
 }

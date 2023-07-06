@@ -1,0 +1,165 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="schoolAddModal"><i class="fa fa-plus"></i>&nbsp;Upload Curriculum</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="uploadCurriculumForm" id="addUserForm" (ngSubmit)="saveUploadCurriculum()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-3">
+                <form [formGroup]="academicYearForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="academicYear">Academic Year&nbsp;<span style="color: red;">*</span>
+                            <i class="fa fa-spin fa-spinner" *ngIf="searchAcademicYear"></i>
+                        </label>
+                        <select class="form-control" required id="academicYear" formControlName="academicYear" (change)="getAssignedGrades()"
+                        [ngClass]="{'is-invalid': !academicYearForm.controls['academicYear'].valid && !isValidForm}">
+                            <option value="{{academicYear.uuid}}" *ngFor="let academicYear of academicYears">{{academicYear.year}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="academicYearForm.controls['academicYear'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select academic year.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+                <form [formGroup]="schoolForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="school">School&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control" required id="school" formControlName="school" (change)="getAssignedGrades()"
+                        [ngClass]="{'is-invalid': !schoolForm.controls['school'].valid && !isValidForm}">
+                            <option value="{{school.uuid}}" *ngFor="let school of schools">{{school.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="schoolForm.controls['school'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select school.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+                <form [formGroup]="materialTypeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="materialType">Material Type&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control" required id="materialType" formControlName="materialType" (change) = "getMaterialFileTypes()"
+                        [ngClass]="{'is-invalid': !materialTypeForm.controls['materialType'].valid && !isValidForm}">
+                            <option value="{{materialType.uuid}}" *ngFor="let materialType of materialTypes">{{materialType.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="materialTypeForm.controls['materialType'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select material type.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+                <form [formGroup]="gradeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="grade">Grade&nbsp;<span style="color: red;">*</span>
+                            <i class="fa fa-spin fa-spinner" *ngIf="searchGrade"></i>
+                        </label>
+                        <select class="form-control" required id="grade" formControlName="grade" (change) = "getAssignedGradeSubjects()"
+                        [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}">
+                            <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="gradeForm.controls['grade'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select grade.</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <form [formGroup]="subjectForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="subject">Subject&nbsp;<span style="color: red;">*</span>
+                            <i class="fa fa-spin fa-spinner" *ngIf="searchSubject"></i>
+                        </label>
+                        <select class="form-control" required id="subject" formControlName="subject" (change)="getChapters()"
+                        [ngClass]="{'is-invalid': !subjectForm.controls['subject'].valid && !isValidForm}">
+                            <option value="{{subject.uuid}}" *ngFor="let subject of subjects">{{subject.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="subjectForm.controls['subject'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select subject.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <form [formGroup]="chapterForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="chapter">Chapter&nbsp;<span style="color: red;">*</span>
+                            <i class="fa fa-spin fa-spinner" *ngIf="searchChapter"></i>
+                        </label>
+                        <select class="form-control" required id="chapter" formControlName="chapter" (change)="getTopics()"
+                        [ngClass]="{'is-invalid': !chapterForm.controls['chapter'].valid && !isValidForm}">
+                            <option value="{{chapter.uuid}}" *ngFor="let chapter of chapters">{{chapter.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="chapterForm.controls['chapter'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select chapter.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4" *ngIf="curriculumUploadAs == 'Topic-wise'">
+                <form [formGroup]="topicForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="topic">Topic&nbsp;<span style="color: red;">*</span>
+                            <i class="fa fa-spin fa-spinner" *ngIf="searchTopic"></i></label>
+                        <select class="form-control" id="topic" formControlName="topic" [required]="curriculumUploadAs == 'Topic-wise'"
+                        [ngClass]="{'is-invalid': !topicForm.controls['topic'].valid && curriculumUploadAs == 'Topic-wise' && !isValidForm}">
+                            <option value="{{topic.uuid}}" *ngFor="let topic of topics">{{topic.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="topicForm.controls['topic'].hasError('required') && curriculumUploadAs == 'Topic-wise' && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select topic.</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <form [formGroup]="curriculumFileForm">
+                    <label class="form-control-label" for="curriculumFile">Select Curriculum Files
+                        <span style="color: red;">[Max Upload File Size : 50 MB ]</span><br>
+                        Accept : [<span class="m-r-5" style="color: blue;" *ngFor="let fileType of selectedFileTypes">{{fileType.name}}</span>]
+                        Total Files : {{uploadedFiles.length}}, Total Size : {{totalSize}} MB
+                    </label>
+                    <file-upload class="form-control" [multiple]="true" required [(ngModel)]="uploadedFiles"
+                    [ngClass]="{'is-invalid': uploadedFiles.length == 0 && !isValidForm}" (click)="calcFileSize()"
+                    formControlName="curriculumFile" id="curriculumFile" (change)="onSelectCurriculumFiles($event)"></file-upload>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <label class="form-control-label">Un-Verified Files</label><br/><br/>
+                <div class="table-responsive">
+                    <table datatable class="row-border table-hover">
+                      <tbody>
+                        <tr *ngFor="let unVerifyFile of unVerifyFiles let i=index">
+                          <td style="width: 10%;">{{i+1}}</td>
+                          <td>{{unVerifyFile}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

@@ -1,0 +1,49 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="materialTypeEditModal"><i class="fa fa-edit"></i>&nbsp;Edit Material Type</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="editMaterialTypeForm" id="editMaterialTypeForm" (ngSubmit)="saveMaterialType()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" required 
+                    formControlName="name" maxlength="150"
+                    [ngClass]="{'is-invalid': !editMaterialTypeForm.controls['name'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="editMaterialTypeForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter name.</label>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <form [formGroup]="fileTypeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="fileType">File Types&nbsp;<span style="color: red;">*</span></label>
+                        <ng-select id="fileType" required
+                        formControlName="fileType" [options]="fileTypes" [multiple]="true"
+                        [ngClass]="!fileTypeForm.controls['fileType'].valid && !isValidForm ? ['ng select', 'is-invalid'] : ['ng-select']">
+                        </ng-select>
+                        <label style="color: red;"
+                        *ngIf="fileTypeForm.controls['fileType'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select file type.</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

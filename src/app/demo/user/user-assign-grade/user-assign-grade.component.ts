@@ -152,6 +152,7 @@ export class UserAssignGradeComponent {
               this.commonSharedService.userAssignedGradeListObject.next({
                 academicYearUUID : this.academicYear.uuid,
                 userUUID : this.userUUID,
+                schoolUUID : this.schoolUUID,
                 result : "success"
               });
           }

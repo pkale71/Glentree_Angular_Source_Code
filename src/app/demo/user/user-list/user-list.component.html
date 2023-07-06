@@ -12,7 +12,7 @@
                 <form [formGroup]="roleForm">
                     <div class="form-group">
                         <label class="form-control-label" for="role">Role</label>
-                        <select class="form-control" required id="role" formControlName="role" (change)="checkSchoolRequired()">
+                        <select class="form-control" required id="role" formControlName="role" (change)="filterUserTypes($event.target.value)">
                             <option value="{{role.id}}" *ngFor="let role of roles">{{role.name}}</option>
                         </select>
                     </div>
@@ -56,7 +56,6 @@
                   <th>Email</th>
                   <th>Mobile</th>
                   <th>User Type</th>
-                  <th>School</th>
                   <th>Active</th>
                   <th></th>
                 </tr>
@@ -69,7 +68,6 @@
                   <td>{{user.email}}</td>
                   <td>{{user.mobile}}</td>
                   <td>{{user.userType?.name}}</td>
-                  <td>{{user.school.name != null ? user.school?.name : "---"}}</td>
                   <td>
                     <span [ngClass]="user.active?'badge bg-success':'badge bg-danger'" (click)="changeStatus(user.uuid, user.active)" 
                     style="cursor: pointer;" title="Change Status">
@@ -79,12 +77,10 @@
                   <td style="width:40px;text-align: right;">
                     <!-- <i class="fa fa-trash-alt" (click)="deleteUser(user.uuid)" title="Delete" style="cursor: pointer;"></i> -->
                     <i class="fa fa-edit" (click)="editUser(user.uuid)" title="Edit" style="cursor: pointer;"></i>
-                    &nbsp;<i class="fa fa-list" (click)="detailUser(user.uuid)" title="Detail" style="cursor: pointer;" 
-                    *ngIf="user.userType?.code=='SCHCD' || user.userType?.code=='SUBHD' || user.userType?.code=='TECHR'"></i>
+                    &nbsp;<i class="fa fa-list" (click)="detailUser(user.uuid)" title="Detail" style="cursor: pointer;"></i>
                   </td>
                 </tr>
                 <tr *ngIf="users.length == 0">
-                  <td></td>
                   <td></td>
                   <td></td>
                   <td></td>
@@ -103,7 +99,6 @@
                     <th>Email</th>
                     <th>Mobile</th>
                     <th>User Type</th>
-                    <th>School</th>
                     <th>Active</th>
                     <th></th>
                 </tr>

@@ -150,8 +150,18 @@
                 </form>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6">
+                <form [formGroup]="logoForm">
+                    <label class="form-control-label" for="logo">Select School Logo 
+                        <span style="color: red;">[ JPEG/PNG, Max File Size : 1 MB ]</span></label>
+                    <file-upload class="form-control" [multiple]="false" [accept]="'image/png, image/jpeg'" maxsize="1 MB"
+                    formControlName="logo" id="logo" (change)="onSelectLogo($event)"></file-upload>
+                </form>
+            </div>
+        </div><br/>
         <div class="clearfix">
-            <h4 class="ng-tns-c137-62">Curriculum Upload Settings</h4>
+            <h4>Curriculum Upload Settings</h4>
         </div>
         <form [formGroup]="schoolUserSettingForm">
             <div class="row">

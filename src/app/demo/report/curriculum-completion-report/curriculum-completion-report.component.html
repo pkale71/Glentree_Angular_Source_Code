@@ -1,0 +1,104 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-calendar"></i>&nbsp;Curriculum Completion Report</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+                <form [formGroup]="academicYearForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="academicYear">Academic Year&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control" required id="academicYear" formControlName="academicYear">
+                            <option value="{{academicYear.uuid}}" *ngFor="let academicYear of academicYears">{{academicYear.year}}</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+              <form [formGroup]="schoolForm">
+                  <div class="form-group">
+                      <label class="form-control-label" for="school">School&nbsp;<span style="color: red;">*</span></label>
+                      <select class="form-control" required id="school" formControlName="school" (change)="getGrades()">
+                          <option value="{{school.uuid}}" *ngFor="let school of schools">{{school.name}}</option>
+                      </select>
+                  </div>
+              </form>
+            </div>
+            <div class="col-md-3">
+              <form [formGroup]="gradeForm">
+                  <div class="form-group">
+                      <label class="form-control-label" for="grade">Grade&nbsp;<span style="color: red;">*</span></label>
+                      <select class="form-control" required id="grade" formControlName="grade" (change)="getSubjects()">
+                          <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
+                      </select>
+                  </div>
+              </form>
+            </div>
+            <div class="col-md-3">
+              <form [formGroup]="subjectForm">
+                  <div class="form-group">
+                      <label class="form-control-label" for="subject">Subject&nbsp;<span style="color: red;">*</span></label>
+                      <select class="form-control" required id="subject" formControlName="subject">
+                          <option value="{{subject.uuid}}" *ngFor="let subject of subjects">{{subject.name}}</option>
+                      </select>
+                  </div>
+              </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" *ngIf="curriculumComplete == 'Topic-wise'">
+              <form [formGroup]="chapterForm">
+                  <div class="form-group">
+                      <label class="form-control-label" for="chapter">Chapter&nbsp;<span style="color: red;">*</span></label>
+                      <select class="form-control" [ngRequired] = "curriculumComplete == 'Topic-wise'" id="chapter" formControlName="chapter">
+                          <option value="{{chapter.uuid}}" *ngFor="let chapter of chapters">{{chapter.name}}</option>
+                      </select>
+                  </div>
+              </form>
+            </div>
+            <div class="{{curriculumComplete == 'Topic-wise' ? 'col-md-6' : 'col-md-12'}}">
+              <br/>
+              <button type="button" class="btn btn-rounded btn-primary float-end" *ngIf="!searchClicked"
+              (click)="getCompletionReport()"><i class="fa fa-search"></i>&nbsp;Search</button>
+              <button type="button" class="btn btn-rounded btn-primary float-end" *ngIf="searchClicked">
+                <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped row-border table-hover pt-10" style="max-height: 300px;overflow: auto;">
+              <thead>
+                <tr>
+                  <th>{{curriculumComplete == 'Topic-wise' ? 'Topics' : 'Chapters'}}</th>
+                  <th *ngFor="let section of sections">
+                    Section-{{section.name}}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let chapterCompletionStatus of chapterCompletionStatuses let i=index">
+                  <td>{{curriculumComplete == 'Topic-wise' ? chapterCompletionStatus.toipc?.name : 
+                    chapterCompletionStatus.chapter?.name}}</td>
+                </tr>
+                <tr *ngIf="chapterCompletionStatuses.length == 0">
+                  <td>No record(s) found</td>
+                  <th *ngFor="let section of sections let i=index">
+                    &nbsp;
+                  </th>
+                </tr>
+              </tbody>
+              <tfoot *ngIf="chapterCompletionStatuses.length > 0">
+                <tr>
+                  <th>{{curriculumComplete == 'Topic-wise' ? 'Topics' : 'Chapters'}}</th>
+                  <th *ngFor="let section of sections let i=index">
+                    Section {{section.name}}
+                  </th>
+                </tr>
+              </tfoot>
+            </table>
+          </div> 
+        </div>
+      </div>
+    </div>
+</div>

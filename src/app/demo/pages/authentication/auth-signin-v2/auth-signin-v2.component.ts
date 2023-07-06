@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { UserService } from 'src/app/theme/shared/service/user.service';
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
+import { CommonService } from 'src/app/theme/shared/service/common.service';
 
 @Component({
   selector: 'app-auth-signin-v2',
@@ -28,6 +29,7 @@ export default class AuthSigninV2Component implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private commonService : CommonService,
     private userService: UserService,
     public commonSharedService : CommonSharedService
   ) 
@@ -68,6 +70,17 @@ export default class AuthSigninV2Component implements OnInit {
     return this.loginForm.controls;
   }
 
+  async getCurrentAcademicYear()
+  {
+    let response = await this.commonService.getCurrentAcademicYear().toPromise();
+    if (response.status_code == 200 && response.message == 'success') 
+    {
+      localStorage.setItem("currentAcademicYear", JSON.stringify(response.data.currentAcademicYear));
+      this.commonSharedService.currentAcademicYear = response.data.currentAcademicYear;
+      this.commonSharedService.currentAcademicYearListObject.next({result : "success"});
+    }
+  }
+
   async onSubmit() {
     this.submitted = true;
     // stop here if form is invalid
@@ -87,6 +100,7 @@ export default class AuthSigninV2Component implements OnInit {
           localStorage.setItem("user", JSON.stringify(response.user));
           this.commonSharedService.loginUser = response.user;
           this.signinClicked = false;
+          this.getCurrentAcademicYear();
           this.router.navigate(['/dashboard/default']);
         }
         else

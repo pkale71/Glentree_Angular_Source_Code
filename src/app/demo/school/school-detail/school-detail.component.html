@@ -5,6 +5,7 @@
           <h5 style="margin-top: 0.8rem;"><i class="fa fa-building"></i>&nbsp;School&nbsp;
             <span [ngClass]="school.active?'badge bg-success':'badge bg-danger'"> Active : {{school.active?'Yes':'No'}}</span>
           </h5>
+          <img class="border border-primary" [src]="schoolLogo" style="width: 100px;">
           <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
            (click)="back()">Back</button>
         </div>
@@ -28,8 +29,8 @@
                         <h6>{{school.email}}</h6>
                     </div>
                 </div>
-            </div>
-            <div class="row">
+              </div>
+              <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Contact1</label>
@@ -66,7 +67,7 @@
                     <div class="form-group">
                         <label>Grade Category</label>
                         <h6>
-                            <span class="badge bg-primary m-r-5" *ngFor="let schoolGradeCategory of school.gradeCategories">
+                            <span class="badge bg-info m-r-5 m-t-5" *ngFor="let schoolGradeCategory of school.gradeCategories">
                                 {{schoolGradeCategory.gradeCategory?.name}}
                             </span>
                         </h6>
@@ -149,9 +150,10 @@
                               <td>{{i+1}}</td>
                               <td>{{schoolGradeSection.name}}</td>
                               <td>
-                                <span class="badge bg-primary m-r-5" *ngFor="let section of schoolGradeSection?.sections" 
-                                style="cursor: pointer;" title="Delete" (click)="deleteGradeSection(section.uuid, section.name)">
-                                    {{section.name}}
+                                <span class="badge bg-primary m-r-5" *ngFor="let section of schoolGradeSection?.sections">
+                                    {{section.name}}<i class="fa fa-times m-l-5" style="cursor: pointer;"
+                                    *ngIf="isCurrentAcademicYear"
+                                    (click)="deleteGradeSection(section.uuid, section.name)"></i>
                                 </span>
                               </td>
                             </tr>

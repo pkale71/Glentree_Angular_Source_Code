@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="CurriculumStatusChangeModal"><i class="fa fa-recycle"></i>&nbsp;Change Curriculum Status</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="changeCurriculumStatusForm" id="changeCurriculumStatusForm" (ngSubmit)="changeCurriculumStatus()" autoComplete="off">
+    <div class="modal-body">    
+        Are you sure to "{{status}}" uploaded file " {{fileName}} ?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="button" class="btn btn-rounded btn-danger" *ngIf="!changeStatusClicked" 
+        (click)="rejectCurriculum()"><i class="fa fa-times"></i>Reject </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!changeStatusClicked"><i class="fa fa-check"></i>Accept </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="changeStatusClicked">
+            <i class="fa fa-spin fa-spinner"></i>Processing...</button>
+    </div>
+</form>

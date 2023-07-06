@@ -8,13 +8,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SchoolService } from 'src/app/theme/shared/service/school.service';
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
+import { SchoolAddComponent } from '../school-add/school-add.component';
+import { SchoolDeleteComponent } from '../school-delete/school-delete.component';
+import { SchoolEditComponent } from '../school-edit/school-edit.component';
 declare var $;
 
 // third party
 import Swal from 'sweetalert2';
-import { SchoolAddComponent } from '../school-add/school-add.component';
-import { SchoolDeleteComponent } from '../school-delete/school-delete.component';
-import { SchoolEditComponent } from '../school-edit/school-edit.component';
 
 @Component({
   selector: 'app-school-list',
@@ -25,6 +25,7 @@ import { SchoolEditComponent } from '../school-edit/school-edit.component';
 })
 export class SchoolListComponent {
   schools : School[];
+  loginUserType : string;
 
   constructor(private notifier: NotifierService, 
   private activatedRoute: ActivatedRoute,
@@ -33,12 +34,29 @@ export class SchoolListComponent {
   public commonSharedService : CommonSharedService,
   private router : Router)
   {
-    this.schools = this.activatedRoute.snapshot.data['schools'].data.schools;
+    this.schools = [];
+    let schools : School[] = this.activatedRoute.snapshot.data['schools'].data.schools;
+    if(this.commonSharedService.loginUser.userType.code != 'SUADM')
+    {
+      let allocatedSchools : School[] = this.commonSharedService.loginUser.schools;
+      for(let i=0;i<schools.length;i++)
+      {
+        let tempSchools : School[] = allocatedSchools.filter(allocatedSchool => allocatedSchool.uuid == schools[i].uuid)
+        if(tempSchools.length > 0)
+        {
+          this.schools.push(schools[i]);
+        }
+      }
+    }
+    else
+    {
+      this.schools = schools;
+    }
   }
 
   ngOnInit() 
   {
-    
+    this.loginUserType = this.commonSharedService.loginUser.userType.code;
   }
 
   public schoolAddResult:any = this.commonSharedService.schoolListObject.subscribe(res =>{

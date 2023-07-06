@@ -11,7 +11,7 @@
 <form [formGroup]="editUserForm" id="editUserForm" (ngSubmit)="saveUser()" autoComplete="off">
     <div class="modal-body">    
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label class="form-control-label" for="firstName">First Name</label>
                     <input class="form-control input-md" id="firstName" type="text" required 
@@ -27,7 +27,7 @@
                     >Please enter valid first name.</label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label class="form-control-label" for="lastName">Last Name</label>
                     <input class="form-control input-md" id="lastName" type="text" 
@@ -39,7 +39,7 @@
                     >Please enter valid last name.</label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label class="form-control-label" for="mobile">Mobile</label>
                     <input class="form-control input-md" id="mobile" type="text" required 
@@ -60,9 +60,7 @@
                     >Please enter valid mobile number</label>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label class="form-control-label" for="email">Email</label>
                     <input class="form-control input-md" id="email" type="email" required 
@@ -79,7 +77,9 @@
                     >Please enter valid email.</label>
                 </div>
             </div>
-            <div class="col-md-4">
+        </div>
+        <div class="row">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label class="form-control-label" for="gender">Gender</label>
                     <select class="form-control input-md" required id="gender" formControlName="gender"
@@ -92,22 +92,19 @@
                     class="error jquery-validation-error small form-text"
                     >Please select gender.</label>
                 </div>
-            </div>
-            
-            <div class="col-md-4">
+            </div>            
+            <div class="col-md-3">
                 <form [formGroup]="roleForm">
                     <div class="form-group">
                         <label class="form-control-label" for="role">Role</label>
                         <select class="form-control" required id="role" formControlName="role" 
-                        (change)="checkSchoolRequired($event.target.value)">
+                        (change)="filterUserTypes($event.target.value)">
                             <option value="{{role.id}}" *ngFor="let role of roles">{{role.name}}</option>
                         </select>
                     </div>
                 </form>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <form [formGroup]="userTypeForm">
                     <div class="form-group">
                         <label class="form-control-label" for="userType">User Type</label>
@@ -122,15 +119,51 @@
                     </div>
                 </form>
             </div>
-            <div class="col-md-4">
+        </div>
+        <div class="clearfix">
+            <h4>School Mapping</h4>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
                 <form [formGroup]="schoolForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="school">School</label>
-                        <select class="form-control" id="school" formControlName="school">
+                        <label class="form-control-label" for="school">Select School</label>
+                        <select class="form-control" id="userType" required formControlName="school">
                             <option value="{{school.uuid}}" *ngFor="let school of schools">{{school.name}}</option>
                         </select>
                     </div>
-                </form>                
+                </form>               
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label">&nbsp;</label><br>
+                    <button type="button" class="btn btn-rounded btn-success" (click)="applySchool()"><i class="fa fa-check"></i>Apply </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped row-border table-hover pt-10">
+                      <thead>
+                        <tr>
+                          <th style="width: 5%;">Sno</th>
+                          <th>School</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let selectedSchool of selectedSchools let i=index">
+                          <td>{{i+1}}</td>
+                          <td>{{selectedSchool.name}}</td>
+                          <td>
+                            <i class="fa fa-trash-alt" *ngIf="selectedSchool.isExist == 0" (click)="deleteSchool(i)"
+                            title="Delete" style="cursor: pointer;"></i>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
             </div>
         </div>
     </div>

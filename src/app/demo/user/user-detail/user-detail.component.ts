@@ -20,6 +20,7 @@ import { SyllabusGradeSubject } from 'src/app/theme/shared/model/syllabus-grade-
 import { DataTablesModule } from 'angular-datatables';
 import { UserAssignGradeSubjectComponent } from '../user-assign-grade-subject/user-assign-grade-subject.component';
 import { Grade } from 'src/app/theme/shared/model/grade';
+import { School } from 'src/app/theme/shared/model/school';
 
 @Component({
   selector: 'app-user-detail',
@@ -33,12 +34,18 @@ export class UserDetailComponent {
   academicYears : AcademicYear[];
   assignedGrades : GradeCategory[];
   assignedGradeSubjects : Grade[];
+  schools : School[];
   assignedGradeSections : SyllabusGradeSubject[];
   academicYearForm : FormGroup;
   academicYearForm1 : FormGroup;
+  schoolForm1 : FormGroup;
+  schoolForm2 : FormGroup;
   searchClicked : boolean;
   searchClicked1 : boolean;
   searchClicked2 : boolean;
+  isCurrentAcademicYear : boolean;
+  isCurrentAcademicYear1 : boolean;
+  isCurrentAcademicYear2 : boolean;
 
   constructor(private notifier: NotifierService, 
     private commonService : CommonService,
@@ -50,10 +57,14 @@ export class UserDetailComponent {
     private location : Location)
     {
       this.user = this.activatedRoute.snapshot.data['user'].data.user;
+      this.schools = JSON.parse(JSON.stringify(this.user.schools));
     }
 
     ngOnInit() 
     {
+      this.isCurrentAcademicYear = false;
+      this.isCurrentAcademicYear1 = false;
+      this.isCurrentAcademicYear2 = false;
       this.searchClicked = false;
       this.searchClicked1 = false;
       this.searchClicked2 = false;
@@ -69,6 +80,20 @@ export class UserDetailComponent {
         'academicYear': ['']
       });
 
+      this.schoolForm1 = this.formbuilder.group({
+        'school': ['']
+      });
+
+      this.schoolForm2 = this.formbuilder.group({
+        'school': ['']
+      });
+      
+      if(this.schools.length > 0)
+      {
+        this.schoolForm1.get("school").setValue(this.schools[0].uuid);
+        this.schoolForm2.get("school").setValue(this.schools[0].uuid);
+      }
+      
       if(this.user?.userType?.code == 'SCHCD' || this.user?.userType?.code == 'SUBHD' || this.user?.userType?.code == 'TECHR')
       {
         this.getAcademicYears();
@@ -84,18 +109,20 @@ export class UserDetailComponent {
     public userAssignedGradeResult:any = this.commonSharedService.userAssignedGradeListObject.subscribe(res =>{
       if(res.result == "success")
       {
+        let schoolUUID = res.schoolUUID;
         let academicYearUUID = res.academicYearUUID;
         let userUUID = res.userUUID;
-        this.getUserAssignedGrades(academicYearUUID, userUUID);
+        this.getUserAssignedGrades(academicYearUUID, userUUID, schoolUUID);
       }
     })
 
     public userAssignedGradeSubjectResult:any = this.commonSharedService.userAssignedGradeSubjectListObject.subscribe(res =>{
       if(res.result == "success")
       {
+        let schoolUUID = res.schoolUUID;
         let academicYearUUID = res.academicYearUUID;
         let userUUID = res.userUUID;
-        this.getUserAssignedGradeSubjects(academicYearUUID, userUUID);
+        this.getUserAssignedGradeSubjects(academicYearUUID, userUUID, schoolUUID);
       }
     })
 
@@ -103,12 +130,48 @@ export class UserDetailComponent {
       if(res.result == "success")
       {
         let academicYearUUID = res.academicYearUUID;
+        let schoolUUID = res.schoolUUID;
         let userUUID = res.userUUID;
-        this.getUserAssignedGradeSections(academicYearUUID, userUUID);
+        this.getUserAssignedGradeSections(academicYearUUID, userUUID, schoolUUID);
       }
     })
 
-    async getUserAssignedGrades(academicYearUUID : string, userUUID : string) 
+    checkCurrentAcademicYear(academicYearUUID : string, checkFor : string)
+    {
+      if(checkFor == "Grade")
+      {
+        this.isCurrentAcademicYear = false;
+      }
+      else if(checkFor == "Subject")
+      {
+        this.isCurrentAcademicYear2 = false;
+      }
+      else if(checkFor == "Sections")
+      {
+        this.isCurrentAcademicYear1 = false;
+      }
+      let tempAcademicYear : AcademicYear[] = this.academicYears.filter(academicYear => academicYear.uuid == academicYearUUID);
+      if(tempAcademicYear.length > 0)
+      {
+        if(tempAcademicYear[0].isCurrent == 1)
+        {
+          if(checkFor == "Grade")
+          {
+            this.isCurrentAcademicYear = true;
+          }
+          else if(checkFor == "Subject")
+          {
+            this.isCurrentAcademicYear2 = true;
+          }
+          else if(checkFor == "Sections")
+          {
+            this.isCurrentAcademicYear1 = true;
+          }
+        }
+      }
+    }
+
+    async getUserAssignedGrades(academicYearUUID : string, userUUID : string, schoolUUID : string) 
     {
       if(userUUID != "" && academicYearUUID != "")
       {
@@ -116,15 +179,16 @@ export class UserDetailComponent {
         this.searchClicked = true;
         try
         {
-          let response = await this.userService.getAssignedGrades(userUUID, academicYearUUID).toPromise();
+          let response = await this.userService.getAssignedGrades(userUUID, academicYearUUID, schoolUUID).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
             $('#tblAssignedGrade').DataTable().clear().destroy();
             this.assignedGrades = response.data.assignedGrades;
             setTimeout(function(){
               $('#tblAssignedGrade').DataTable();
-            },1000);
+            },500);
             this.searchClicked = false;
+            this.checkCurrentAcademicYear(academicYearUUID, "Grade");
             this.modalService.dismissAll();
           }
         }
@@ -134,7 +198,7 @@ export class UserDetailComponent {
           this.searchClicked = false;
           setTimeout(function(){
             $('#tblAssignedGrade').DataTable();
-          },1000);
+          },500);
         }
       }
       else
@@ -143,7 +207,7 @@ export class UserDetailComponent {
       }
     }
 
-    async getUserAssignedGradeSubjects(academicYearUUID : string, userUUID : string) 
+    async getUserAssignedGradeSubjects(academicYearUUID : string, userUUID : string, schoolUUID : string) 
     {
       if(userUUID != "" && academicYearUUID != "")
       {
@@ -151,15 +215,16 @@ export class UserDetailComponent {
         this.searchClicked2 = true;
         try
         {
-          let response = await this.userService.getAssignedGradeSubjects(userUUID, academicYearUUID).toPromise();
+          let response = await this.userService.getAssignedGradeSubjects(userUUID, academicYearUUID, schoolUUID).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
             $('#tblAssignedGradeSubject').DataTable().clear().destroy();
             this.assignedGradeSubjects = response.data.assignedSubjects;
             setTimeout(function(){
               $('#tblAssignedGradeSubject').DataTable();
-            },1000);
+            },500);
             this.searchClicked2 = false;
+            this.checkCurrentAcademicYear(academicYearUUID, "Subject");
             this.modalService.dismissAll();
           }
         }
@@ -169,7 +234,7 @@ export class UserDetailComponent {
           this.searchClicked2 = false;
           setTimeout(function(){
             $('#tblAssignedGradeSubject').DataTable();
-          },1000);
+          },500);
         }
       }
       else
@@ -178,7 +243,7 @@ export class UserDetailComponent {
       }
     }
 
-    async getUserAssignedGradeSections(academicYearUUID : string, userUUID : string) 
+    async getUserAssignedGradeSections(academicYearUUID : string, userUUID : string, schoolUUID : string) 
     {
       if(userUUID != "" && academicYearUUID != "")
       {
@@ -186,15 +251,16 @@ export class UserDetailComponent {
         this.searchClicked1 = true;
         try
         {
-          let response = await this.userService.getAssignedGradeSections(userUUID, academicYearUUID).toPromise();
+          let response = await this.userService.getAssignedGradeSections(userUUID, academicYearUUID, schoolUUID, 0).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
             $('#tblAssignedGradeSection').DataTable().clear().destroy();
             this.assignedGradeSections = response.data.assignedSections;
             setTimeout(function(){
               $('#tblAssignedGradeSection').DataTable();
-            },1000);
+            },500);
             this.searchClicked1 = false;
+            this.checkCurrentAcademicYear(academicYearUUID, "Sections");
             this.modalService.dismissAll();
           }
         }
@@ -204,7 +270,7 @@ export class UserDetailComponent {
           this.searchClicked1 = false;
           setTimeout(function(){
             $('#tblAssignedGradeSection').DataTable();
-          },1000);
+          },500);
         }
       }
       else
@@ -230,22 +296,24 @@ export class UserDetailComponent {
         }
 ////Show Assigned Grades
         let academicYearUUID = this.academicYearForm.get("academicYear").value;
+        let schoolUUID1 = this.schoolForm1.get("school").value;
+        let schoolUUID2 = this.schoolForm2.get("school").value;
         if(this.user.userType.code == "SCHCD")
         {
-          this.getUserAssignedGrades(academicYearUUID, this.user.uuid);
+          this.getUserAssignedGrades(academicYearUUID, this.user.uuid, schoolUUID1);
         }
         else if(this.user.userType.code == "SUBHD")
         {
-          this.getUserAssignedGradeSubjects(academicYearUUID, this.user.uuid);
+          this.getUserAssignedGradeSubjects(academicYearUUID, this.user.uuid, schoolUUID1);
         }
-        this.getUserAssignedGradeSections(academicYearUUID, this.user.uuid);
+        this.getUserAssignedGradeSections(academicYearUUID, this.user.uuid, schoolUUID2);
       }
     }
 
     addAssignGrades()
     {
       let params = {
-        "schoolUUID" : this.user.school.uuid,
+        "schoolUUID" : this.user.schools[0].uuid,
         "userUUID" : this.user.uuid
       }
       const dialogRef = this.modalService.open(UserAssignGradeComponent, 
@@ -258,7 +326,7 @@ export class UserDetailComponent {
     addAssignGradeSubjects()
     {
       let params = {
-        "schoolUUID" : this.user.school.uuid,
+        "schoolUUID" : this.user.schools[0].uuid,
         "userUUID" : this.user.uuid
       }
       const dialogRef = this.modalService.open(UserAssignGradeSubjectComponent, 
@@ -271,7 +339,7 @@ export class UserDetailComponent {
     addAssignGradeSections()
     {
       let params = {
-        "schoolUUID" : this.user.school.uuid,
+        "schoolUUID" : this.user.schools[0]?.uuid,
         "userUUID" : this.user.uuid
       }
       const dialogRef = this.modalService.open(UserAssignGradeSectionComponent, 

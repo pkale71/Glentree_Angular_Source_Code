@@ -15,7 +15,7 @@
                 <div class="form-group">
                     <label class="form-control-label" for="year">Year&nbsp;<span style="color: red;">*</span></label>
                     <input class="form-control input-md" id="year" type="text" required 
-                    formControlName="year" maxlength="12"
+                    formControlName="year" maxlength="12" [textMask]="{ mask: maskAcademicYear }"
                     [ngClass]="{'is-invalid': !addAcademicYearForm.controls['year'].valid && !isValidForm}"/>
                     <label style="color: red;"
                     *ngIf="addAcademicYearForm.controls['year'].hasError('required') && !isValidForm"

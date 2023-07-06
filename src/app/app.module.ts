@@ -26,7 +26,7 @@ import { ChatMsgComponent } from './theme/layout/admin/nav-bar/nav-right/chat-ms
 import { ChatUserListComponent } from './theme/layout/admin/nav-bar/nav-right/chat-user-list/chat-user-list.component';
 import { FriendComponent } from './theme/layout/admin/nav-bar/nav-right/chat-user-list/friend/friend.component';
 import { ToggleFullScreenDirective } from './theme/shared/full-screen/toggle-full-screen';
-import { ToastrModule } from 'ngx-toastr';
+import { ToastrModule } from 'ngx-toastr'; 
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor, ErrorInterceptor, fakeBackendProvider } from 'src/app/theme/shared/_helpers';

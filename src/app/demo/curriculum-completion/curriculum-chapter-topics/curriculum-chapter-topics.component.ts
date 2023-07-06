@@ -60,7 +60,7 @@ export class CurriculumChapterTopicsComponent {
       this.selectedSection = null;
     }
     //Chapter-wise or Topic-wise
-    this.curriculumComplete = this.loginUser.school?.curriculumComplete;
+    this.curriculumComplete = this.loginUser.schools[0]?.curriculumComplete;
     /////
     this.generateDynamicFormArray();
 

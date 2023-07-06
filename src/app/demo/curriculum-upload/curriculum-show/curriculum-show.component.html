@@ -1,0 +1,129 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-file"></i>&nbsp;Curriculum Detail
+            <span [ngClass]="checkStatus()">{{curriculumUpload.status}}</span>
+          </h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="back()">Back</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Academic Year</label>
+                        <h6>{{curriculumUpload.curriculum?.academicYear?.year}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>School</label>
+                        <h6>{{curriculumUpload.curriculum?.school?.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Grade</label>
+                        <h6>{{curriculumUpload.curriculum?.grade?.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <h6>{{curriculumUpload.curriculum?.subject?.name}}</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Chapter</label>
+                        <h6>{{curriculumUpload.curriculum?.chapter?.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Topic</label>
+                        <h6>{{curriculumUpload.curriculum?.topic?.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>File Name</label>
+                        <h6>{{curriculumUpload.fileName}}</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Material Type</label>
+                        <h6>{{curriculumUpload.materialType?.name}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3" *ngIf="curriculumUpload.status == 'Uploaded'">
+                    <div class="form-group">
+                        <label>Uploaded On</label>
+                        <h6>{{curriculumUpload.uploadedOn | date : "dd-MMM-yyyy"}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3" *ngIf="curriculumUpload.status == 'Uploaded'">
+                    <div class="form-group">
+                        <label>Uploaded By</label>
+                        <h6>{{curriculumUpload.uploadedBy?.fullName}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3" *ngIf="curriculumUpload.status == 'Verified'">
+                    <div class="form-group">
+                        <label>Verified On</label>
+                        <h6>{{curriculumUpload.verifiedOn | date : "dd-MMM-yyyy"}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3" *ngIf="curriculumUpload.status == 'Verified'">
+                    <div class="form-group">
+                        <label>Verified By</label>
+                        <h6>{{curriculumUpload.verifiedBy?.fullName}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3" *ngIf="curriculumUpload.status == 'Published'">
+                    <div class="form-group">
+                        <label>Published On</label>
+                        <h6>{{curriculumUpload.publishedOn | date : "dd-MMM-yyyy"}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3" *ngIf="curriculumUpload.status == 'Published'">
+                    <div class="form-group">
+                        <label>Published By</label>
+                        <h6>{{curriculumUpload.publishedBy?.fullName}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3" *ngIf="curriculumUpload.status == 'Rejected'">
+                    <div class="form-group">
+                        <label>Rejected On</label>
+                        <h6>{{curriculumUpload.rejectedOn | date : "dd-MMM-yyyy"}}</h6>
+                    </div>
+                </div>
+                <div class="col-md-3" *ngIf="curriculumUpload.status == 'Rejected'">
+                    <div class="form-group">
+                        <label>Rejected By</label>
+                        <h6>{{curriculumUpload.rejectedBy?.fullName}}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>        
+      </div>
+      <div class="card" [style]="otherCurriculumFile ? 'width: 100%;height: 100%;' : ''">
+            <video id="my_video_1" width='100%' height='50%' autoplay
+                controls controlsList="nodownload" preload="none" *ngIf="videoCurriculumFile" 
+                data-setup='{ "aspectRatio":"100%" }'>
+                    <source [src]="videoCurriculumFile" type='video/mp4' />
+            </video>
+            <audio controls controlsList="nodownload" autoplay
+                *ngIf="audioCurriculumFile">
+                    <source [src]="audioCurriculumFile">
+            </audio>
+            <iframe sandbox="allow-scripts allow-same-origin" *ngIf="otherCurriculumFile" [src]=otherCurriculumFile width='100%' height='100%' frameborder="0"></iframe>
+      </div>
+    </div>
+</div>

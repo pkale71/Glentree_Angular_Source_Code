@@ -80,6 +80,7 @@ export class GradeListComponent {
       gradeCategory.id = 0;
       gradeCategory.name = "All";
       this.gradeCategories.unshift(gradeCategory);
+      this.gradeCategoryForm.get("gradeCategory").setValue("0");
     }
   }
 
@@ -95,7 +96,7 @@ export class GradeListComponent {
       this.grades = response.data.grades;
       setTimeout(function(){
         $('#tblSubject').DataTable();
-      },1000);
+      },800);
       this.searchClicked = false;
       this.modalService.dismissAll();
     }

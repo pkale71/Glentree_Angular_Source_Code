@@ -2,17 +2,23 @@
   <li appToggleFullScreen>
     <a href="javascript:" class="full-screen"><i class="feather icon-maximize"></i></a>
   </li>
-  <!-- <li class="nav-item dropdown" ngbDropdown placement="auto">
-    <a href="javascript:" data-toggle="dropdown" ngbDropdownToggle>Dropdown</a>
+  <li class="nav-item dropdown text-white" ngbDropdown placement="auto">
+    Current Academic Year : {{currentAcademicYear ? currentAcademicYear.year : "None"}}
+  </li>
+  <li class="nav-item dropdown text-white" ngbDropdown placement="auto" *ngIf="loginUser.role.name == 'School'">
+    <img class="border border-primary" [src]="schoolLogo" style="width: 100px;">
+    {{schoolLogo ? '' : "Allocated School : " + loginUser.schools[0].name}}
+  </li>
+  <li class="nav-item dropdown" ngbDropdown placement="auto" 
+  *ngIf="loginUser.userType?.code != 'SUADM' && loginUser.role.name == 'Head'">
+    <a class="text-white" href="javascript:" data-toggle="dropdown" ngbDropdownToggle>Allocated Schools</a>
     <ul class="dropdown-menu" ngbDropdownMenu>
-      <li><a class="dropdown-item" href="javascript:">Action</a></li>
-      <li><a class="dropdown-item" href="javascript:">Another action</a></li>
-      <li>
-        <a class="dropdown-item" href="javascript:">Something else here</a>
+      <li *ngFor="let school of loginUser.schools">
+        <a class="dropdown-item" href="javascript:">{{school.name}}</a>
       </li>
     </ul>
   </li>
-  <li class="nav-item">
+  <!-- <li class="nav-item">
     <app-nav-search></app-nav-search>
-  </li>
-</ul> -->
+  </li> -->
+</ul> 

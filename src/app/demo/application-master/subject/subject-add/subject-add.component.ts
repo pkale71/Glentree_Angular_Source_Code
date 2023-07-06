@@ -24,6 +24,7 @@ export class SubjectAddComponent {
   saveClicked : boolean;
   gradeId : number;
   gradeName : string;
+  syllabusId : number;
 
   constructor(private commonService: CommonService, 
     private activeModal: NgbActiveModal,
@@ -40,6 +41,7 @@ export class SubjectAddComponent {
     //get Modal params
     this.gradeId = this.modalParams.id;
     this.gradeName = this.modalParams.gradeName;
+    this.syllabusId = this.modalParams.syllabusId;
     /////
     this.isValidForm = true;
     this.saveClicked = false;
@@ -53,7 +55,7 @@ export class SubjectAddComponent {
     });
 
     this.syllabusForm = this.formbuilder.group({
-      'syllabus': ['', [Validators.required]]
+      'syllabus': [this.syllabusId, [Validators.required]]
     });
 
     this.getSyllabuses();

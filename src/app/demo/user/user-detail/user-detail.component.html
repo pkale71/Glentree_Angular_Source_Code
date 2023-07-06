@@ -2,7 +2,7 @@
     <div class="col-sm-12">
       <div class="card">
         <div class="card-header" style="padding: 10px 25px;">
-          <h5 style="margin-top: 0.8rem;"><i class="fa fa-building"></i>&nbsp;User&nbsp;
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-user"></i>&nbsp;User&nbsp;
             <span [ngClass]="user.active?'badge bg-success':'badge bg-danger'"> Active : {{user.active?'Yes':'No'}}</span>
           </h5>
           <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
@@ -48,10 +48,14 @@
                         <h6>{{user.userType.name}}</h6>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <div class="form-group">
-                        <label>School</label>
-                        <h6>{{user.school.uuid != null ? user.school.name : "---"}}</h6>
+                        <label>Schools</label>
+                        <h6>
+                          <span class="badge bg-info m-r-5 m-t-5" *ngFor="let school of user.schools">
+                            {{school.name}}
+                          </span>
+                        </h6>
                     </div>
                 </div>
             </div>
@@ -83,9 +87,20 @@
                   </form>
               </div>
               <div class="col-md-6">
-                <br/>
+                <form [formGroup]="schoolForm1">
+                    <div class="form-group">
+                        <label class="form-control-label" for="school">School</label>
+                        <select class="form-control" required id="school" formControlName="school">
+                            <option value="{{school.uuid}}" *ngFor="let school of schools">{{school.name}}</option>
+                        </select>
+                    </div>
+                </form>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-12 text-end">
                 <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked && user?.userType?.code == 'SCHCD'"
-                (click)="getUserAssignedGrades(academicYearForm1.controls['academicYear'].value, user.uuid)"><i class="fa fa-search"></i>&nbsp;Search</button>
+                (click)="getUserAssignedGrades(academicYearForm1.controls['academicYear'].value, user.uuid, schoolForm1.controls['school'].value)"><i class="fa fa-search"></i>&nbsp;Search</button>
                 <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked && user?.userType?.code == 'SCHCD'">
                   <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
 
@@ -111,9 +126,10 @@
                           <td>{{i+1}}</td>
                           <td>{{assignedGrade.name}}</td>
                           <td>
-                            <span [ngClass]="'badge bg-primary m-r-5'" style="cursor: pointer;" *ngFor="let userSuperviseGrade of assignedGrade.userSuperviseGrades"
-                            (click)="deleteAssignedGrade(userSuperviseGrade.uuid, userSuperviseGrade.assignedGrade?.name)">
-                              {{userSuperviseGrade.assignedGrade?.name}}
+                            <span [ngClass]="'badge bg-primary text-white m-r-5 m-t-5'" *ngFor="let userSuperviseGrade of assignedGrade.userSuperviseGrades">
+                              {{userSuperviseGrade.assignedGrade?.name}}<i class="fa fa-times m-l-5" style="cursor: pointer;" 
+                              *ngIf="isCurrentAcademicYear"
+                              (click)="deleteAssignedGrade(userSuperviseGrade.uuid, userSuperviseGrade.assignedGrade?.name)"></i>
                             </span>
                           </td>
                         </tr>
@@ -142,9 +158,10 @@
                           <td>{{i+1}}</td>
                           <td>{{assignedGradeSubject.name}}</td>
                           <td>
-                            <span [ngClass]="'badge bg-primary m-r-5'" style="cursor: pointer;" *ngFor="let userAssignedSubject of assignedGradeSubject.userAssignedSubjects"
-                            (click)="deleteAssignedSubject(userAssignedSubject.uuid, assignedGradeSubject.name, userAssignedSubject.assignedSubject?.name)">
-                              {{userAssignedSubject.assignedSubject?.name}}
+                            <span [ngClass]="'badge bg-primary text-white m-r-5 m-t-5'" *ngFor="let userAssignedSubject of assignedGradeSubject.userAssignedSubjects">
+                              {{userAssignedSubject.assignedSubject?.name}}<i class="fa fa-times m-l-5" style="cursor: pointer;" 
+                              *ngIf="isCurrentAcademicYear2"
+                              (click)="deleteAssignedSubject(userAssignedSubject.uuid, assignedGradeSubject.name, userAssignedSubject.assignedSubject?.name)"></i>
                             </span>
                           </td>
                         </tr>
@@ -182,9 +199,20 @@
                   </form>
               </div>
               <div class="col-md-6">
-                <br/>
+                <form [formGroup]="schoolForm2">
+                    <div class="form-group">
+                        <label class="form-control-label" for="school">School</label>
+                        <select class="form-control" required id="school" formControlName="school">
+                            <option value="{{school.uuid}}" *ngFor="let school of schools">{{school.name}}</option>
+                        </select>
+                    </div>
+                </form>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 text-end">
                 <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked1"
-                (click)="getUserAssignedGradeSections(academicYearForm.controls['academicYear'].value, user.uuid)"><i class="fa fa-search"></i>&nbsp;Search</button>
+                (click)="getUserAssignedGradeSections(academicYearForm.controls['academicYear'].value, user.uuid, schoolForm2.controls['school'].value)"><i class="fa fa-search"></i>&nbsp;Search</button>
                 <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked1">
                   <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
               </div>
@@ -207,9 +235,10 @@
                         <td>{{assignedGradeSection.grade?.name}}</td>
                         <td>{{assignedGradeSection.name}}</td>
                         <td>
-                          <span [ngClass]="'badge bg-primary m-r-5'" style="cursor: pointer;" *ngFor="let userAssignedSection of assignedGradeSection?.grade?.userAssignedSections"
-                          (click)="deleteAssignedGradeSection(userAssignedSection.uuid, assignedGradeSection.grade?.name, userAssignedSection?.assignedSection?.name)">
-                            {{userAssignedSection?.assignedSection?.name}}
+                          <span [ngClass]="'badge bg-primary text-white m-r-5 m-t-5'" *ngFor="let userAssignedSection of assignedGradeSection?.grade?.userAssignedSections">
+                            {{userAssignedSection?.assignedSection?.name}}<i class="fa fa-times m-l-5" style="cursor: pointer;"
+                            *ngIf="isCurrentAcademicYear1"
+                            (click)="deleteAssignedGradeSection(userAssignedSection.uuid, assignedGradeSection.grade?.name, userAssignedSection?.assignedSection?.name)"></i> 
                           </span>
                         </td>
                       </tr>

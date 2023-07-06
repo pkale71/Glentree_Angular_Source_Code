@@ -5,5 +5,5 @@ export class GradeCategory {
   id?: number;
   name?: string;
   grades?: Grade[];
-  userSuperviceGrades : UserSuperviseGrade[];
+  userSuperviseGrades : UserSuperviseGrade[];
 }

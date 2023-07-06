@@ -2,7 +2,7 @@
     <div class="col-sm-12">
       <div class="card">
         <div class="card-header" style="padding: 10px 25px;">
-          <h5 style="margin-top: 0.8rem;"><i class="fa fa-building"></i>&nbsp;Topic
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-book"></i>&nbsp;Chapter
           </h5>
           <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
            (click)="back()">Back</button>
@@ -64,8 +64,10 @@
                               <td>{{i+1}}</td>
                               <td>{{topic.name}}</td>
                               <td>
-                                <span [ngClass]="topic.active?'badge bg-success':'badge bg-danger'" style="cursor: pointer;" (click)="changeStatus(topic.uuid, topic.active)">
+                                <span [ngClass]="topic.active?'badge bg-success':'badge bg-danger'">
                                   {{topic.active?'Yes':'No'}}
+                                  <i class="fa fa-recycle m-l-5" style="cursor: pointer;" 
+                                  (click)="changeStatus(topic.uuid, topic.active)"></i>
                                 </span>
                               </td>
                               <td style="width:40px;text-align: right;">

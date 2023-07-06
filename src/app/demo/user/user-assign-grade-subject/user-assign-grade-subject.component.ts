@@ -181,6 +181,7 @@ export class UserAssignGradeSubjectComponent {
               this.saveClicked = false;
               this.closeModal();
               this.commonSharedService.userAssignedGradeSubjectListObject.next({
+                schoolUUID : this.schoolUUID,
                 academicYearUUID : this.academicYear.uuid,
                 userUUID : this.userUUID,
                 result : "success"

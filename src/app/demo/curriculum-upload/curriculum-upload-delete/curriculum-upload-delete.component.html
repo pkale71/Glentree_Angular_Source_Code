@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="CurriculumUploadDeleteModal"><i class="fa fa-trash-alt"></i>&nbsp;Delete Curriculum Upload</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="deleteCurriculumUploadForm" id="deleteCurriculumUploadForm" (ngSubmit)="deleteCurriculumUpload()" autoComplete="off">
+    <div class="modal-body">    
+        Are you sure to delete curriculum upload?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!deleteClicked"><i class="fa fa-trash-alt"></i>Delete </button>
+        <button type="submit" class="btn btn-rounded btn-success" disabled="true" *ngIf="deleteClicked">
+            <i class="fa fa-spin fa-spinner"></i>Deleting...</button>
+    </div>
+</form>

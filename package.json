@@ -74,6 +74,7 @@
     "ngx-chips": "^3.0.0",
     "ngx-clipboard": "^15.1.0",
     "ngx-color-picker": "^13.0.0",
+    "ngx-doc-viewer": "^15.0.1",
     "ngx-echarts": "^15.0.1",
     "ngx-editor": "^15.0.1",
     "ngx-image-cropper": "^6.3.1",
@@ -85,7 +86,7 @@
     "raphael": "^2.3.0",
     "rxjs": "~7.5.7",
     "screenfull": "^6.0.2",
-    "sweetalert2": "^11.6.15",
+    "sweetalert2": "^11.4.8",
     "tslib": "^2.4.1",
     "zone.js": "~0.12.0"
   },

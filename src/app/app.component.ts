@@ -9,7 +9,7 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   // public props
-  title = 'Glentree Academy';
+  title = 'PROSE EDU';
 
   // constructor
   constructor(private router: Router) {}

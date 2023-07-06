@@ -1,7 +1,7 @@
 // Angular Import
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';  
 
 // Project import
 import { BreadcrumbModule } from './components';
@@ -36,7 +36,7 @@ import {
     NgbCollapseModule,
     NgScrollbarModule,
     NgbProgressbarModule,
-    GalleryModule
+    GalleryModule,
   ],
   exports: [
     CommonModule,
